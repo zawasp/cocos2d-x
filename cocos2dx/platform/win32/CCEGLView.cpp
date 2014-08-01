@@ -459,7 +459,10 @@ LRESULT CCEGLView::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
         {
             CCDirector::sharedDirector()->getKeypadDispatcher()->dispatchKeypadMSG(kTypeBackClicked);
         }
-
+		else
+		{
+			CCDirector::sharedDirector()->getKeypadDispatcher()->dispatchKeypadDown(wParam);
+		}
         if ( m_lpfnAccelerometerKeyHook!=NULL )
         {
             (*m_lpfnAccelerometerKeyHook)( message,wParam,lParam );
