@@ -54,16 +54,16 @@ Scene::~Scene()
 
 bool Scene::init()
 {
-    //create default camera
-    auto camera = Camera::create();
-    addChild(camera);
-    
     auto size = Director::getInstance()->getWinSize();
     return initWithSize(size);
 }
 
 bool Scene::initWithSize(const Size& size)
 {
+    //create default camera
+    auto camera = Camera::create();
+    addChild(camera);
+    
     setContentSize(size);
     return true;
 }
@@ -125,7 +125,7 @@ void Scene::addChild(Node* child, int zOrder, const std::string &name)
 void Scene::update(float delta)
 {
     Node::update(delta);
-    if (nullptr != _physicsWorld)
+    if (nullptr != _physicsWorld && _physicsWorld->isAutoStep())
     {
         _physicsWorld->update(delta);
     }
@@ -153,6 +153,10 @@ bool Scene::initWithPhysics()
     {
         Director * director;
         CC_BREAK_IF( ! (director = Director::getInstance()) );
+        // add camera
+        auto camera = Camera::create();
+        addChild(camera);
+        
         this->setContentSize(director->getWinSize());
         CC_BREAK_IF(! (_physicsWorld = PhysicsWorld::construct(*this)));
         
