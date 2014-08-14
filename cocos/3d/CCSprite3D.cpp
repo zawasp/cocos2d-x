@@ -382,7 +382,7 @@ void Sprite3D::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)
         }
         //support tint and fade
         meshCommand.setDisplayColor(Vec4(color.r, color.g, color.b, color.a));
-        Director::getInstance()->getRenderer()->addCommand(&meshCommand);
+        renderer->addCommand(&meshCommand);
     }
 }
 
@@ -397,6 +397,20 @@ void Sprite3D::setBlendFunc(const BlendFunc &blendFunc)
 const BlendFunc& Sprite3D::getBlendFunc() const
 {
     return _blend;
+}
+
+void Sprite3D::setCullFace(GLenum cullFace)
+{
+    for (auto& it : _meshCommands) {
+        it.setCullFace(cullFace);
+    }
+}
+
+void Sprite3D::setCullFaceEnabled(bool enable)
+{
+    for (auto& it : _meshCommands) {
+        it.setCullFaceEnabled(enable);
+    }
 }
 
 NS_CC_END
