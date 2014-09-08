@@ -69,6 +69,7 @@ namespace ui {
          */
         static Scale9Sprite* create(const std::string& file, const Rect& rect,  const Rect& capInsets);
         
+        
         /**
          * Creates a 9-slice sprite with a texture file. The whole texture will be
          * broken down into a 3×3 grid of equal blocks.
@@ -233,6 +234,9 @@ namespace ui {
         virtual bool init();
         virtual bool init(Sprite* sprite, const Rect& rect, bool rotated, const Rect& capInsets);
         virtual bool init(Sprite* sprite, const Rect& rect, const Rect& capInsets);
+        CC_DEPRECATED_ATTRIBUTE virtual bool initWithBatchNode(SpriteBatchNode* batchnode, const Rect& rect, bool rotated, const Rect& capInsets);
+        CC_DEPRECATED_ATTRIBUTE virtual bool initWithBatchNode(SpriteBatchNode* batchnode, const Rect& rect, const Rect& capInsets);
+
         /**
          * Creates and returns a new sprite object with the specified cap insets.
          * You use this method to add cap insets to a sprite or to change the existing
@@ -244,6 +248,8 @@ namespace ui {
         Scale9Sprite* resizableSpriteWithCapInsets(const Rect& capInsets);
         
         virtual bool updateWithSprite(Sprite* sprite, const Rect& rect, bool rotated, const Rect& capInsets);
+        CC_DEPRECATED_ATTRIBUTE bool updateWithBatchNode(SpriteBatchNode* batchnode, const Rect& originalRect, bool rotated, const Rect& capInsets);
+
         virtual void setSpriteFrame(SpriteFrame * spriteFrame);
         
         // overrides
@@ -305,6 +311,7 @@ namespace ui {
         virtual void updateDisplayedOpacity(GLubyte parentOpacity) override;
         virtual void updateDisplayedColor(const Color3B& parentColor) override;
         virtual void disableCascadeColor() override;
+        virtual void disableCascadeOpacity() override;
         
         Sprite* getSprite()const;
         

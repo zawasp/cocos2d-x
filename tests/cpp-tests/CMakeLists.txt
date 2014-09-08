@@ -2,7 +2,6 @@ set(APP_NAME cpp-tests)
 
 if(WIN32)
   set(PLATFORM_SRC
-    Classes/ExtensionsTest/EditBoxTest/EditBoxTest.cpp
     Classes/ExtensionsTest/NetworkTest/WebSocketTest.cpp
     Classes/ExtensionsTest/NetworkTest/SocketIOTest.cpp
     proj.win32/main.cpp
@@ -124,7 +123,6 @@ set(SAMPLE_SRC
   Classes/UITest/CocoStudioGUITest/CustomWidget/CustomReader.cpp
   Classes/UITest/CocoStudioGUITest/CustomTest/CustomImageTest/CustomImageTest.cpp
   Classes/UITest/CocoStudioGUITest/CustomTest/CustomParticleWidgetTest/CustomParticleWidgetTest.cpp
-  Classes/ExtensionsTest/Scale9SpriteTest/Scale9SpriteTest.cpp
   Classes/NewRendererTest/NewRendererTest.cpp
   Classes/NewEventDispatcherTest/NewEventDispatcherTest.cpp
   Classes/FontTest/FontTest.cpp
@@ -193,6 +191,8 @@ set(SAMPLE_SRC
 
 include_directories(
   Classes
+  ${CMAKE_SOURCE_DIR}/external/chipmunk/include/chipmunk
+  ${CMAKE_SOURCE_DIR}/cocos/editor-support
 )
 
 # add the executable
@@ -201,17 +201,7 @@ add_executable(${APP_NAME}
 )
 
 target_link_libraries(${APP_NAME}
-  spine
-  cocostudio
-  cocosbuilder
-  extensions
-  audio
   cocos2d
-  cocos3d
-  box2d
-  ui
-  network
-  sqlite3
 )
 
 set(APP_BIN_DIR "${CMAKE_BINARY_DIR}/bin/${APP_NAME}")

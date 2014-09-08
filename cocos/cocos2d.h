@@ -29,8 +29,8 @@ THE SOFTWARE.
 #define __COCOS2D_H__
 
 // 0x00 HI ME LO
-// 00   03 02 00
-#define COCOS2D_VERSION 0x00030200
+// 00   03 03 00
+#define COCOS2D_VERSION 0x00030300
 
 //
 // all cocos2d include files
@@ -158,6 +158,7 @@ THE SOFTWARE.
 #include "renderer/CCVertexIndexData.h"
 #include "renderer/CCPrimitive.h"
 #include "renderer/CCPrimitiveCommand.h"
+#include "renderer/CCTrianglesCommand.h"
 
 // physics
 #include "physics/CCPhysicsBody.h"
@@ -277,6 +278,9 @@ THE SOFTWARE.
 #include "deprecated/CCNotificationCenter.h"
 // CCDeprecated.h must be included at the end
 #include "deprecated/CCDeprecated.h"
+
+//3d
+#include "3d/cocos3d.h"
 
 
 NS_CC_BEGIN
