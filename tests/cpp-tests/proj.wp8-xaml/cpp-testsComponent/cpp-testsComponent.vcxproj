@@ -184,6 +184,7 @@
     <ClCompile Include="..\..\..\..\cocos\platform\wp8-xaml\cpp\DirectXBase.cpp" />
     <ClCompile Include="..\..\..\..\cocos\platform\wp8-xaml\cpp\EditBoxEvent.cpp" />
     <ClCompile Include="..\..\Classes\BaseTest.cpp" />
+    <ClCompile Include="..\..\Classes\BillBoardTest\BillBoardTest.cpp" />
     <ClCompile Include="..\..\Classes\BugsTest\Bug-Child.cpp" />
     <ClCompile Include="..\..\Classes\Camera3DTest\Camera3DTest.cpp" />
     <ClCompile Include="..\..\Classes\ChipmunkTest\ChipmunkTest.cpp" />
@@ -378,6 +379,7 @@
     <ClInclude Include="..\..\..\..\cocos\platform\wp8-xaml\cpp\DirectXHelper.h" />
     <ClInclude Include="..\..\..\..\cocos\platform\wp8-xaml\cpp\EditBoxEvent.h" />
     <ClInclude Include="..\..\Classes\BaseTest.h" />
+    <ClInclude Include="..\..\Classes\BillBoardTest\BillBoardTest.h" />
     <ClInclude Include="..\..\Classes\Box2DTestBed\Tests\ConvexHull.h" />
     <ClInclude Include="..\..\Classes\Box2DTestBed\Tests\ConveyorBelt.h" />
     <ClInclude Include="..\..\Classes\Box2DTestBed\Tests\Mobile.h" />
@@ -651,9 +653,6 @@
     </ProjectReference>
     <ProjectReference Include="..\..\..\..\external\Box2D\proj.wp8\Box2D.vcxproj">
       <Project>{c55734a3-702c-4fa1-b950-32c8e169302f}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\..\external\chipmunk\proj.wp8\chipmunk.vcxproj">
-      <Project>{ba568a33-98f9-4d2a-bfff-c065adcb447a}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
