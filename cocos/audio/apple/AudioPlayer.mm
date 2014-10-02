@@ -21,6 +21,12 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  ****************************************************************************/
+
+#include "platform/CCPlatformConfig.h"
+#if CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_MAC
+
+#import <Foundation/Foundation.h>
+
 #include "AudioPlayer.h"
 #include "AudioCache.h"
 #include "platform/CCFileUtils.h"
@@ -45,7 +51,7 @@ AudioPlayer::~AudioPlayer()
 {
     _exitThread = true;
     if (_audioCache && _audioCache->_queBufferFrames > 0) {
-        _timeMtx.unlock();
+        _sleepCondition.notify_all();
         if (_rotateBufferThread.joinable()) {
             _rotateBufferThread.join();
         }
@@ -60,7 +66,7 @@ bool AudioPlayer::play2d(AudioCache* cache)
     }
     _audioCache = cache;
     
-    alSourcei(_alSource, AL_BUFFER, NULL);
+    alSourcei(_alSource, AL_BUFFER, 0);
     alSourcef(_alSource, AL_PITCH, 1.0f);
     alSourcef(_alSource, AL_GAIN, _volume);
     
@@ -80,14 +86,12 @@ bool AudioPlayer::play2d(AudioCache* cache)
         alGenBuffers(3, _bufferIds);
         alError = alGetError();
         if (alError == AL_NO_ERROR) {
-            for (int index = 0; index < QUEUEBUFFER_NUM; ++index) {
-                alBufferData(_bufferIds[index], _audioCache->_format, _audioCache->_queBuffers[index], _audioCache->_queBufferBytes, _audioCache->_sampleRate);
-            }
-            alSourcei(_alSource, AL_BUFFER, NULL);
-            alSourceQueueBuffers(_alSource, QUEUEBUFFER_NUM, _bufferIds);
-            
-            _timeMtx.lock();
             _rotateBufferThread = std::thread(&AudioPlayer::rotateBufferThread,this, _audioCache->_queBufferFrames * QUEUEBUFFER_NUM + 1);
+            
+            for (int index = 0; index < QUEUEBUFFER_NUM; ++index) {
+                alBufferData(_bufferIds[index], _audioCache->_format, _audioCache->_queBuffers[index], _audioCache->_queBufferSize[index], _audioCache->_sampleRate);
+            }
+            alSourceQueueBuffers(_alSource, QUEUEBUFFER_NUM, _bufferIds);
         }
         else {
             printf("%s:alGenBuffers error code:%x", __PRETTY_FUNCTION__,alError);
@@ -109,8 +113,6 @@ bool AudioPlayer::play2d(AudioCache* cache)
 
 void AudioPlayer::rotateBufferThread(int offsetFrame)
 {
-    printf("%s start\n",__PRETTY_FUNCTION__);
-    
     ALint sourceState;
     ALint bufferProcessed = 0;
     ExtAudioFileRef extRef = nullptr;
@@ -121,7 +123,7 @@ void AudioPlayer::rotateBufferThread(int offsetFrame)
     
     auto error = ExtAudioFileOpenURL(fileURL, &extRef);
     if(error) {
-        printf("%s: ExtAudioFileOpenURL FAILED, Error = %ld\n", __PRETTY_FUNCTION__, error);
+        printf("%s: ExtAudioFileOpenURL FAILED, Error = %ld\n", __PRETTY_FUNCTION__,(long) error);
         goto ExitBufferThread;
     }
     
@@ -179,7 +181,11 @@ void AudioPlayer::rotateBufferThread(int offsetFrame)
             }
         }
         
-        _timeMtx.try_lock_for(std::chrono::milliseconds(50));
+        if (_exitThread) {
+            break;
+        }
+        std::unique_lock<std::mutex> lk(_sleepMutex);
+        _sleepCondition.wait_for(lk,std::chrono::milliseconds(75));
     }
     
 ExitBufferThread:
@@ -189,7 +195,6 @@ ExitBufferThread:
         ExtAudioFileDispose(extRef);
     }
     free(tmpBuffer);
-    printf("%s: end\n",__PRETTY_FUNCTION__);
 }
 
 bool AudioPlayer::setLoop(bool loop)
@@ -213,3 +218,5 @@ bool AudioPlayer::setTime(float time)
     }
     return false;
 }
+
+#endif

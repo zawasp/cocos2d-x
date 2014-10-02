@@ -21,10 +21,16 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  ****************************************************************************/
+
+#include "platform/CCPlatformConfig.h"
+#if CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_MAC
+
 #include "AudioCache.h"
-#include <thread>
+
+#import <Foundation/Foundation.h>
 #import <OpenAL/alc.h>
 #import <AudioToolbox/ExtendedAudioFile.h>
+#include <thread>
 
 #define PCMDATA_CACHEMAXSIZE 1048576
 
@@ -97,14 +103,14 @@ void AudioCache::readDataTask()
     
     auto error = ExtAudioFileOpenURL(fileURL, &extRef);
     if(error) {
-        printf("%s: ExtAudioFileOpenURL FAILED, Error = %ld\n", __PRETTY_FUNCTION__, error);
+        printf("%s: ExtAudioFileOpenURL FAILED, Error = %ld\n", __PRETTY_FUNCTION__, (long)error);
         goto ExitThread;
     }
     
     // Get the audio data format
 	error = ExtAudioFileGetProperty(extRef, kExtAudioFileProperty_FileDataFormat, &thePropertySize, &theFileFormat);
 	if(error) {
-        printf("%s: ExtAudioFileGetProperty(kExtAudioFileProperty_FileDataFormat) FAILED, Error = %ld\n", __PRETTY_FUNCTION__, error);
+        printf("%s: ExtAudioFileGetProperty(kExtAudioFileProperty_FileDataFormat) FAILED, Error = %ld\n", __PRETTY_FUNCTION__, (long)error);
         goto ExitThread;
     }
 	if (theFileFormat.mChannelsPerFrame > 2)  {
@@ -127,7 +133,7 @@ void AudioCache::readDataTask()
     
     error = ExtAudioFileSetProperty(extRef, kExtAudioFileProperty_ClientDataFormat, sizeof(outputFormat), &outputFormat);
     if(error) {
-        printf("%s: ExtAudioFileSetProperty FAILED, Error = %ld\n", __PRETTY_FUNCTION__, error);
+        printf("%s: ExtAudioFileSetProperty FAILED, Error = %ld\n", __PRETTY_FUNCTION__, (long)error);
         goto ExitThread;
     }
     
@@ -135,7 +141,7 @@ void AudioCache::readDataTask()
 	thePropertySize = sizeof(theFileLengthInFrames);
 	error = ExtAudioFileGetProperty(extRef, kExtAudioFileProperty_FileLengthFrames, &thePropertySize, &theFileLengthInFrames);
 	if(error) {
-        printf("%s: ExtAudioFileGetProperty(kExtAudioFileProperty_FileLengthFrames) FAILED, Error = %ld\n", __PRETTY_FUNCTION__, error);
+        printf("%s: ExtAudioFileGetProperty(kExtAudioFileProperty_FileLengthFrames) FAILED, Error = %ld\n", __PRETTY_FUNCTION__, (long)error);
         goto ExitThread;
     }
 	
@@ -192,17 +198,18 @@ void AudioCache::readDataTask()
         _queBufferFrames = theFileFormat.mSampleRate * QUEUEBUFFER_TIME_STEP;
         _queBufferBytes = _queBufferFrames * outputFormat.mBytesPerFrame;
         
-		theDataBuffer.mNumberBuffers = QUEUEBUFFER_NUM;
+		theDataBuffer.mNumberBuffers = 1;
+        theDataBuffer.mBuffers[0].mNumberChannels = outputFormat.mChannelsPerFrame;
         for (int index = 0; index < QUEUEBUFFER_NUM; ++index) {
             _queBuffers[index] = (char*)malloc(_queBufferBytes);
             
-            theDataBuffer.mBuffers[index].mDataByteSize = _queBufferBytes;
-            theDataBuffer.mBuffers[index].mNumberChannels = outputFormat.mChannelsPerFrame;
-            theDataBuffer.mBuffers[index].mData = _queBuffers[index];
+            theDataBuffer.mBuffers[0].mDataByteSize = _queBufferBytes;
+            theDataBuffer.mBuffers[0].mData = _queBuffers[index];
+            frames = _queBufferFrames;
+            ExtAudioFileRead(extRef, (UInt32*)&frames, &theDataBuffer);
+            
+            _queBufferSize[index] = theDataBuffer.mBuffers[0].mDataByteSize;
         }
-		
-        frames = _queBufferFrames * QUEUEBUFFER_NUM;
-        ExtAudioFileRead(extRef, (UInt32*)&frames, &theDataBuffer);
     }
     
 ExitThread:
@@ -238,3 +245,5 @@ void AudioCache::addCallbacks(const std::function<void ()> &callback)
     }
     _callbackMutex.unlock();
 }
+
+#endif
