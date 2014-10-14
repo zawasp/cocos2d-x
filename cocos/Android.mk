@@ -180,6 +180,7 @@ physics/chipmunk/CCPhysicsWorldInfo_chipmunk.cpp \
 ../external/ConvertUTF/ConvertUTFWrapper.cpp \
 ../external/ConvertUTF/ConvertUTF.c \
 ../external/tinyxml2/tinyxml2.cpp \
+../external/unzip/ioapi_mem.cpp \
 ../external/unzip/ioapi.cpp \
 ../external/unzip/unzip.cpp \
 ../external/edtaa3func/edtaa3func.cpp \
@@ -269,4 +270,6 @@ $(call import-module,extensions)
 $(call import-module,Box2D)
 $(call import-module,curl/prebuilt/android)
 $(call import-module,websockets/prebuilt/android)
+$(call import-module,protobuf-lite)
+
 

@@ -1021,7 +1021,7 @@ Sprite3DReskinTest::Sprite3DReskinTest()
     item3->setPosition( Vec2(VisibleRect::left().x+50, VisibleRect::bottom().y+item1->getContentSize().height*6 ) );
     item4->setPosition( Vec2(VisibleRect::left().x+50, VisibleRect::bottom().y+item1->getContentSize().height *7 ) );
     item5->setPosition( Vec2(VisibleRect::left().x+50, VisibleRect::bottom().y+item1->getContentSize().height *8 ) );
-    auto pMenu1 = CCMenu::create(item1,item2,item3,item4,item5,NULL);
+    auto pMenu1 = CCMenu::create(item1, item2, item3, item4, item5, nullptr);
     pMenu1->setPosition(Vec2(0,0));
     this->addChild(pMenu1, 10);
     
@@ -1263,13 +1263,13 @@ void Sprite3DWithOBBPerfromanceTest::onTouchesBegan(const std::vector<Touch*>& t
     for (auto touch: touches)
     {
         auto location = touch->getLocationInView();
-        
-        if(_obb.size() > 0)
+        auto obbSize = _obb.size();
+        if(obbSize)
         {
             _intersetList.clear();
             Ray ray;
             calculateRayByLocationInView(&ray,location);
-            for(int i = 0; i < _obb.size(); i++)
+            for(decltype(obbSize) i = 0; i < obbSize; i++)
             {
                 if(ray.intersects(_obb[i]))
                 {
@@ -1290,9 +1290,10 @@ void Sprite3DWithOBBPerfromanceTest::onTouchesMoved(const std::vector<Touch*>& t
 {
     for (auto touch: touches)
     {
-        auto location = touch->getLocation();
-        
-        for(int i = 0; i < _obb.size(); i++)
+        auto location = touch->getLocation();       
+        auto obbSize = _obb.size();
+
+        for(decltype(obbSize) i = 0; i < obbSize; i++)
         {
             if(_intersetList.find(i) != _intersetList.end())
                 _obb[i]._center = Vec3(location.x,location.y,0);
@@ -1329,7 +1330,8 @@ void Sprite3DWithOBBPerfromanceTest::update(float dt)
     if(_obb.size() > 0)
     {
         _drawOBB->clear();
-        for(int i =0; i < _obb.size(); i++)
+        auto obbSize = _obb.size();
+        for(decltype(obbSize) i =0; i < obbSize; i++)
         {
             Vec3 corners[8] = {};
             _obb[i].getCorners(corners);
