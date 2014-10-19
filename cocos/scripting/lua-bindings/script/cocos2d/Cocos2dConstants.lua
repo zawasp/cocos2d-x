@@ -273,6 +273,10 @@ cc.Handler.EVENT_CONTROLLER_KEYDOWN = 60
 cc.Handler.EVENT_CONTROLLER_KEYUP = 61
 cc.Handler.EVENT_CONTROLLER_KEYREPEAT = 62
 cc.Handler.EVENT_CONTROLLER_AXIS = 63
+cc.Handler.EVENT_SPINE_ANIMATION_START = 64
+cc.Handler.EVENT_SPINE_ANIMATION_END = 65
+cc.Handler.EVENT_SPINE_ANIMATION_COMPLETE = 66
+cc.Handler.EVENT_SPINE_ANIMATION_EVENT = 67
 
 
 cc.EVENT_UNKNOWN = 0
@@ -571,4 +575,32 @@ cc.MATRIX_STACK_TYPE =
     MODELVIEW = 0,
     PROJECTION = 1,
     TEXTURE = 2,
+}
+
+cc.LightType = 
+{
+    DIRECTIONAL = 0,
+    POINT = 1,
+    SPOT = 2,
+    AMBIENT = 3,
+}
+
+cc.LightFlag = 
+{
+    LIGHT0  = math.pow(2,0),
+    LIGHT1  = math.pow(2,1),
+    LIGHT2  = math.pow(2,2),
+    LIGHT3  = math.pow(2,3),
+    LIGHT4  = math.pow(2,4),
+    LIGHT5  = math.pow(2,5),
+    LIGHT6  = math.pow(2,6),
+    LIGHT7  = math.pow(2,7),
+    LIGHT8  = math.pow(2,8),
+    LIGHT9  = math.pow(2,9),
+    LIGHT10 = math.pow(2,10),
+    LIGHT11 = math.pow(2,11),
+    LIGHT12 = math.pow(2,12),
+    LIGHT13 = math.pow(2,13),
+    LIGHT14 = math.pow(2,14),
+    LIGHT15 = math.pow(2,15),
 }
