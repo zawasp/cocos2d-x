@@ -57,6 +57,7 @@
 #include "cocostudio/WidgetReader/ScrollViewReader/ScrollViewReader.h"
 #include "cocostudio/WidgetReader/PageViewReader/PageViewReader.h"
 #include "cocostudio/WidgetReader/ListViewReader/ListViewReader.h"
+#include "cocostudio/WidgetReader/ArmatureNodeReader/ArmatureNodeReader.h"
 
 #include "flatbuffers/flatbuffers.h"
 #include "flatbuffers/util.h"
@@ -199,6 +200,8 @@ CSLoader::CSLoader()
     CREATE_CLASS_NODE_READER_INFO(ScrollViewReader);
     CREATE_CLASS_NODE_READER_INFO(PageViewReader);
     CREATE_CLASS_NODE_READER_INFO(ListViewReader);
+    
+    CREATE_CLASS_NODE_READER_INFO(ArmatureNodeReader);
     
 }
 
@@ -762,6 +765,9 @@ Node* CSLoader::nodeWithFlatBuffersFile(const std::string &fileName)
         SpriteFrameCache::getInstance()->addSpriteFramesWithFile(textures->Get(i)->c_str());        
     }
     
+    auto v = csparsebinary->version();
+    if (v) _csdVersion = v->c_str();
+       
     Node* node = nodeWithFlatBuffers(csparsebinary->nodeTree());
     
     return node;
@@ -786,12 +792,23 @@ Node* CSLoader::nodeWithFlatBuffers(const flatbuffers::NodeTree *nodetree)
         {
             node = createNodeWithFlatBuffersFile(filePath);
             reader->setPropsWithFlatBuffers(node, options->data());
-            
+
+            bool isloop = projectNodeOptions->isLoop();
+            bool isautoplay = projectNodeOptions->isAutoPlay();
+
             cocostudio::timeline::ActionTimeline* action = cocostudio::timeline::ActionTimelineCache::getInstance()->createActionWithFlatBuffersFile(filePath);
-            if(action)
+            if (action)
             {
                 node->runAction(action);
                 action->gotoFrameAndPlay(0);
+                if (isautoplay)
+                {
+                    action->gotoFrameAndPlay(0, isloop);
+                }
+                else
+                {
+                    action->gotoFrameAndPause(0);
+                }
             }
         }
     }
@@ -1089,6 +1106,10 @@ Node* CSLoader::createNodeWithFlatBuffersForSimulator(const std::string& filenam
     }
     
     auto nodeTree = csparsebinary->nodeTree();
+
+    auto v = csparsebinary->version();
+    if (v) _csdVersion = v->c_str();
+
     Node* node = nodeWithFlatBuffersForSimulator(nodeTree);
     
     _rootNode = nullptr;
@@ -1118,12 +1139,22 @@ Node* CSLoader::nodeWithFlatBuffersForSimulator(const flatbuffers::NodeTree *nod
         {
             node = createNodeWithFlatBuffersForSimulator(filePath);
             reader->setPropsWithFlatBuffers(node, options->data());
-            
-            cocostudio::timeline::ActionTimeline* action = cocostudio::timeline::ActionTimelineCache::getInstance()->createActionWithFlatBuffersForSimulator(filePath);
+
+            bool isloop = projectNodeOptions->isLoop();
+            bool isautoplay = projectNodeOptions->isAutoPlay();
+            cocostudio::timeline::ActionTimeline* action = cocostudio::timeline::ActionTimelineCache::getInstance()->createActionWithFlatBuffersFile(filePath);
             if (action)
             {
                 node->runAction(action);
                 action->gotoFrameAndPlay(0);
+                if (isautoplay)
+                {
+                    action->gotoFrameAndPlay(0, isloop);
+                }
+                else
+                {
+                    action->gotoFrameAndPause(0);
+                }
             }
         }
     }
@@ -1201,6 +1232,7 @@ Node* CSLoader::nodeWithFlatBuffersForSimulator(const flatbuffers::NodeTree *nod
                 node->addChild(child);
             }
         }
+        Helper::doLayout(node);
     }
     
 //    _loadingNodeParentHierarchy.pop_back();
