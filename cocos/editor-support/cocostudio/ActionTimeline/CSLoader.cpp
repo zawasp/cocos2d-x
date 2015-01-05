@@ -29,6 +29,7 @@
 #include "../../cocos/ui/CocosGUI.h"
 #include "CCActionTimelineCache.h"
 #include "CCActionTimeline.h"
+#include "CCActionTimelineNode.h"
 #include "../CCSGUIReader.h"
 #include "cocostudio/CocoStudio.h"
 #include "cocostudio/CSParseBinary_generated.h"
@@ -180,6 +181,7 @@ CSLoader::CSLoader()
 , _jsonPath("")
 , _monoCocos2dxVersion("")
 , _rootNode(nullptr)
+, _csBuildID("2.0.8.0")
 {
     CREATE_CLASS_NODE_READER_INFO(NodeReader);
     CREATE_CLASS_NODE_READER_INFO(SingleNodeReader);
@@ -282,6 +284,32 @@ ActionTimeline* CSLoader::createTimeline(const std::string &filename)
     
     return nullptr;
 }
+
+ActionTimelineNode* CSLoader::createActionTimelineNode(const std::string& filename)
+{
+    Node* root = createNode(filename);
+    ActionTimeline* action = createTimeline(filename);
+    
+    if(root && action)
+    {
+        root->runAction(action);
+        action->gotoFrameAndPlay(0);
+    }
+    
+    ActionTimelineNode* node = ActionTimelineNode::create(root, action);
+    return node;
+}
+ActionTimelineNode* CSLoader::createActionTimelineNode(const std::string& filename, int startIndex, int endIndex, bool loop)
+{
+    ActionTimelineNode* node = createActionTimelineNode(filename);
+    ActionTimeline* action = node->getActionTimeline();
+    if(action)
+        action->gotoFrameAndPlay(startIndex, endIndex, loop);
+    
+    return node;
+}
+
+
 
 Node* CSLoader::createNodeFromJson(const std::string& filename)
 {
@@ -756,6 +784,24 @@ Node* CSLoader::nodeWithFlatBuffersFile(const std::string &fileName)
     
     auto csparsebinary = GetCSParseBinary(buf.getBytes());
     
+    
+    auto csBuildId = csparsebinary->version();
+    if (csBuildId)
+    {
+        CCASSERT(strcmp(_csBuildID.c_str(), csBuildId->c_str()) == 0,
+            String::createWithFormat("%s%s%s%s%s%s%s%s%s%s",
+            "The reader build id of your Cocos exported file(",
+            csBuildId->c_str(),
+            ") and the reader build id in your Cocos2d-x(",
+            _csBuildID.c_str(),
+            ") are not match.\n",
+            "Please get the correct reader(build id ",
+            csBuildId->c_str(), 
+            ")from ",
+            "http://www.cocos2d-x.org/filedown/cocos-reader",
+            " and replace it in your Cocos2d-x")->getCString());
+    }
+
     // decode plist
     auto textures = csparsebinary->textures();
     int textureSize = csparsebinary->textures()->size();
@@ -764,9 +810,6 @@ Node* CSLoader::nodeWithFlatBuffersFile(const std::string &fileName)
     {
         SpriteFrameCache::getInstance()->addSpriteFramesWithFile(textures->Get(i)->c_str());        
     }
-    
-    auto v = csparsebinary->version();
-    if (v) _csdVersion = v->c_str();
        
     Node* node = nodeWithFlatBuffers(csparsebinary->nodeTree());
     
@@ -790,8 +833,9 @@ Node* CSLoader::nodeWithFlatBuffers(const flatbuffers::NodeTree *nodetree)
         CCLOG("filePath = %s", filePath.c_str());
         if (filePath != "" && FileUtils::getInstance()->isFileExist(filePath))
         {
-            node = createNodeWithFlatBuffersFile(filePath);
-            reader->setPropsWithFlatBuffers(node, options->data());
+
+            Node* root = createNodeWithFlatBuffersFile(filePath);
+            reader->setPropsWithFlatBuffers(root, options->data());
 
             bool isloop = projectNodeOptions->isLoop();
             bool isautoplay = projectNodeOptions->isAutoPlay();
@@ -799,8 +843,7 @@ Node* CSLoader::nodeWithFlatBuffers(const flatbuffers::NodeTree *nodetree)
             cocostudio::timeline::ActionTimeline* action = cocostudio::timeline::ActionTimelineCache::getInstance()->createActionWithFlatBuffersFile(filePath);
             if (action)
             {
-                node->runAction(action);
-                action->gotoFrameAndPlay(0);
+                root->runAction(action);
                 if (isautoplay)
                 {
                     action->gotoFrameAndPlay(0, isloop);
@@ -810,6 +853,9 @@ Node* CSLoader::nodeWithFlatBuffers(const flatbuffers::NodeTree *nodetree)
                     action->gotoFrameAndPause(0);
                 }
             }
+
+            node = ActionTimelineNode::create(root, action);
+            node->setName(root->getName());
         }
     }
     else if (classname == "SimpleAudio")
@@ -1106,9 +1152,6 @@ Node* CSLoader::createNodeWithFlatBuffersForSimulator(const std::string& filenam
     }
     
     auto nodeTree = csparsebinary->nodeTree();
-
-    auto v = csparsebinary->version();
-    if (v) _csdVersion = v->c_str();
 
     Node* node = nodeWithFlatBuffersForSimulator(nodeTree);
     
