@@ -101,6 +101,9 @@ public:
     virtual void setOpacity(GLubyte opacity) override;
     virtual void setOpacityModifyRGB(bool value) override;
     virtual bool isOpacityModifyRGB() const override;
+
+    void followNode(Node *node, const Vec2& point);
+    void clearFollowNode();
     
 CC_CONSTRUCTOR_ACCESS:
     MotionStreak();
@@ -142,6 +145,10 @@ protected:
     Tex2F* _texCoords;
     
     CustomCommand _customCommand;
+
+    bool _isFollowingNode;
+    Vec2 _followPoint;
+    Node *_followNode;
 
 private:
     CC_DISALLOW_COPY_AND_ASSIGN(MotionStreak);

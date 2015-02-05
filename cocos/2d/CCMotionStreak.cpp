@@ -303,6 +303,11 @@ void MotionStreak::update(float delta)
     }
     _nuPoints-=mov;
 
+    if (_isFollowingNode)
+    {
+        _positionR = _parent->convertToNodeSpace(_followNode->convertToWorldSpace(_followPoint));
+    }
+
     // Append new point
     bool appendNewPoint = true;
     if(_nuPoints >= _maxPoints)
@@ -409,6 +414,23 @@ void MotionStreak::draw(Renderer *renderer, const Mat4 &transform, uint32_t flag
     _customCommand.init(_globalZOrder, transform, flags);
     _customCommand.func = CC_CALLBACK_0(MotionStreak::onDraw, this, transform, flags);
     renderer->addCommand(&_customCommand);
+}
+
+void MotionStreak::followNode(Node *node, const Vec2& point)
+{
+    if (node != nullptr)
+    {
+        _isFollowingNode = true;
+        _startingPositionInitialized = true;
+        _followNode = node;
+        _followPoint = point;
+    }
+}
+
+void MotionStreak::clearFollowNode()
+{
+    _isFollowingNode = false;
+    _followNode = nullptr;
 }
 
 NS_CC_END
