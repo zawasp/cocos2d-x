@@ -50,6 +50,18 @@ public:
     // get value methods
 
     /**
+    @brief Checks if the given key exists
+    * @js NA
+    */
+    bool    keyExists(const char* pKey);
+
+    /**
+    @brief Deletes a given key
+    * @js NA
+    */
+    void    deleteKey(const char* pKey);
+
+    /**
     @brief Get bool value by key, if the key doesn't exist, a default value will return.
      You can set the default value, or it is false.
     * @js NA
