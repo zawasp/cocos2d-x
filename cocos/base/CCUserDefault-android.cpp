@@ -254,7 +254,7 @@ int UserDefault::getIntegerForKey(const char* pKey, int defaultValue)
     }
 #endif
     
-	return getIntegerForKeyJNI(pKey, defaultValue);
+    return getIntegerForKeyJNI(pKey, defaultValue);
 }
 
 float UserDefault::getFloatForKey(const char* pKey)
@@ -326,7 +326,7 @@ double UserDefault::getDoubleForKey(const char* pKey, double defaultValue)
     }
 #endif
 
-	return getDoubleForKeyJNI(pKey, defaultValue);
+    return getDoubleForKeyJNI(pKey, defaultValue);
 }
 
 std::string UserDefault::getStringForKey(const char* pKey)
