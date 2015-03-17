@@ -165,8 +165,6 @@ bool UserDefault::keyExists(const char* pKey)
         ret = true;
     }
 
-    if (doc) delete doc;
-
     return ret;
 }
 
@@ -181,8 +179,6 @@ void UserDefault::deleteKey(const char* pKey)
         doc->DeleteNode(node);
         doc->SaveFile(UserDefault::getInstance()->getXMLFilePath().c_str());
     }
-
-    if (doc) delete doc;
 }
 
 bool UserDefault::getBoolForKey(const char* pKey)
