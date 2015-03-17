@@ -149,10 +149,9 @@ UserDefault::UserDefault()
 bool UserDefault::keyExists(const char* pKey)
 {
     const char* value = nullptr;
-    tinyxml2::XMLElement* rootNode;
     tinyxml2::XMLDocument* doc;
     tinyxml2::XMLElement* node;
-    node = getXMLNodeForKey(pKey, &rootNode, &doc);
+    node = getXMLNodeForKey(pKey, &doc);
     // find the node
     if (node && node->FirstChild())
     {
@@ -173,11 +172,9 @@ bool UserDefault::keyExists(const char* pKey)
 
 void UserDefault::deleteKey(const char* pKey)
 {
-    const char* value = nullptr;
-    tinyxml2::XMLElement* rootNode;
     tinyxml2::XMLDocument* doc;
     tinyxml2::XMLElement* node;
-    node = getXMLNodeForKey(pKey, &rootNode, &doc);
+    node = getXMLNodeForKey(pKey, &doc);
     // find the node
     if (node && node->FirstChild())
     {
