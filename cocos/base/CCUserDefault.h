@@ -49,6 +49,7 @@ class CC_DLL UserDefault
 public:
     // get value methods
 
+    /**
     @brief Checks if the given key exists
     * @js NA
     */
