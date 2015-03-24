@@ -1,6 +1,5 @@
 /****************************************************************************
- Copyright (c) 2014 cocos2d-x.org
- Copyright (c) 2014 Chukong Technologies Inc.
+ Copyright (c) 2014-2015 Chukong Technologies Inc.
  
  http://www.cocos2d-x.org
  
@@ -39,8 +38,14 @@ class EventController;
 class EventDispatcher;
 
 /**
+ * @addtogroup base
+ * @{
+ */
+
+/**
  * @class Controller
  * @brief A Controller object represents a connected physical game controller.
+ * @js NA
  */
 class Controller
 {
@@ -208,6 +213,8 @@ private:
     friend class EventListenerController;
 };
 
+// end group
+/// @}
 
 NS_CC_END
 

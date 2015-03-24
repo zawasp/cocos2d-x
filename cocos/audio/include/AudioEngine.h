@@ -1,5 +1,5 @@
 /****************************************************************************
- Copyright (c) 2014 Chukong Technologies Inc.
+ Copyright (c) 2014-2015 Chukong Technologies Inc.
 
  http://www.cocos2d-x.org
 
@@ -41,9 +41,9 @@
 #endif // ERROR
 
 /**
-* @addtogroup Audio
-* @{
-*/
+ * @addtogroup core
+ * @{
+ */
 
 NS_CC_BEGIN
     namespace experimental{
@@ -52,6 +52,7 @@ NS_CC_BEGIN
  * @class AudioProfile
  *
  * @brief
+ * @js NA
  */
 class EXPORT_DLL AudioProfile
 {
@@ -80,6 +81,7 @@ class AudioEngineImpl;
  * @brief Offers a interface to play audio.
  *
  * @note Make sure to call AudioEngine::end() when the audio engine is not needed anymore to release resources.
+ * @js NA
  */
 
 class EXPORT_DLL AudioEngine
@@ -333,7 +335,9 @@ protected:
 
 }
 NS_CC_END
-// end audio group
+
+// end group
 /// @}
+
 #endif // __AUDIO_ENGINE_H_
 #endif
