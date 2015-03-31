@@ -150,14 +150,15 @@ void Sprite3D::afterAsyncLoad(void* param)
                     }
                     
                     Sprite3DCache::getInstance()->addSprite3DData(asyncParam->modlePath, data);
-                    meshdatas = nullptr;
+                    
+                    CC_SAFE_DELETE(meshdatas);
                     materialdatas = nullptr;
                     nodeDatas = nullptr;
                 }
             }
-            delete meshdatas;
-            delete materialdatas;
-            delete nodeDatas;
+            CC_SAFE_DELETE(meshdatas);
+            CC_SAFE_DELETE(materialdatas);
+            CC_SAFE_DELETE(nodeDatas);
             
             if (asyncParam->texPath != "")
             {
@@ -290,12 +291,13 @@ bool Sprite3D::initWithFile(const std::string &path)
             }
             
             Sprite3DCache::getInstance()->addSprite3DData(path, data);
+            CC_SAFE_DELETE(meshdatas);
             return true;
         }
     }
-    delete meshdatas;
-    delete materialdatas;
-    delete nodeDatas;
+    CC_SAFE_DELETE(meshdatas);
+    CC_SAFE_DELETE(materialdatas);
+    CC_SAFE_DELETE(nodeDatas);
     
     return false;
 }
@@ -476,6 +478,7 @@ void Sprite3D::createNode(NodeData* nodedata, Node* root, const MaterialDatas& m
         {
             if(it->bones.size() > 0 || singleSprite)
             {
+                this->setName(nodedata->id);
                 auto mesh = Mesh::create(nodedata->id, getMeshIndexData(it->subMeshId));
                 if(mesh)
                 {
@@ -516,6 +519,17 @@ void Sprite3D::createNode(NodeData* nodedata, Node* root, const MaterialDatas& m
                             }
                         }
                     }
+                    
+                    Vec3 pos;
+                    Quaternion qua;
+                    Vec3 scale;
+                    nodedata->transform.decompose(&scale, &qua, &pos);
+                    setPosition3D(pos);
+                    setRotationQuat(qua);
+                    setScaleX(scale.x);
+                    setScaleY(scale.y);
+                    setScaleZ(scale.z);
+                    
                 }
             }
             else
