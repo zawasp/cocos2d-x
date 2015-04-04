@@ -105,11 +105,16 @@ public:
     CC_DEPRECATED_ATTRIBUTE bool getPlayBack() const { return _playReverse; }
     CC_DEPRECATED_ATTRIBUTE void setPlayBack(bool reverse) { _playReverse = reverse; }
     
-    /**get & set high quality
-     * @param true: is high quality, false: is low quality
+    /**set high quality
+     * The default value is based on Configuration::isHighAnimate3DQuality(). You can configure it in the config.plist. However, you can modify it using the following function
+     * @param true: is high quality, false: is low quality.
      */
     void setHighQuality(bool isHighQuality);
-    bool getHighQuality() const;
+    
+    /**get high quality
+     * is it high quality
+     */
+    bool isHighQuality() const;
     
 CC_CONSTRUCTOR_ACCESS:
     
@@ -159,7 +164,7 @@ protected:
     static std::unordered_map<Node*, Animate3D*> s_runningAnimates;
 };
 
-// end of actions group
+// end of 3d group
 /// @}
 
 NS_CC_END
