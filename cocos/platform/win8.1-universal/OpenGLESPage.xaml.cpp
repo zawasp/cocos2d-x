@@ -36,6 +36,10 @@ using namespace Windows::UI::Xaml::Input;
 using namespace Windows::UI::Xaml::Media;
 using namespace Windows::UI::Xaml::Navigation;
 
+#if (WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP)
+using namespace Windows::Phone::UI::Input;
+#endif
+
 OpenGLESPage::OpenGLESPage() :
     OpenGLESPage(nullptr)
 {
@@ -76,6 +80,7 @@ OpenGLESPage::OpenGLESPage(OpenGLES* openGLES) :
 
 #if (WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP)
     Windows::UI::ViewManagement::StatusBar::GetForCurrentView()->HideAsync();
+    HardwareButtons::BackPressed += ref new EventHandler<BackPressedEventArgs^>(this, &OpenGLESPage::OnBackButtonPressed);
 #else
     // Disable all pointer visual feedback for better performance when touching.
     // This is not supported on Windows Phone applications.
@@ -163,6 +168,28 @@ void OpenGLESPage::OnVisibilityChanged(Windows::UI::Core::CoreWindow^ sender, Wi
     }
 }
 
+#if (WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP)
+/*
+    We set args->Handled = true to prevent the app from quitting when the back button is pressed.
+    This is because this back button event happens on the XAML UI thread and not the cocos2d-x UI thread.
+    We need to give the game developer a chance to decide to exit the app depending on where they
+    are in their game. They can receive the back button event by listening for the 
+    EventKeyboard::KeyCode::KEY_BACKSPACE event. 
+
+    The default behavior is to exit the app if the  EventKeyboard::KeyCode::KEY_BACKSPACE event
+    is not handled by the game.
+*/
+void OpenGLESPage::OnBackButtonPressed(Object^ sender, BackPressedEventArgs^ args)
+{
+    if (m_renderer)
+    {
+        m_renderer->QueueBackButtonEvent();
+        args->Handled = true;
+    }
+}
+#endif
+
+
 void OpenGLESPage::OnSwapChainPanelSizeChanged(Object^ sender, Windows::UI::Xaml::SizeChangedEventArgs^ e)
 {
     // Size change events occur outside of the render thread.  A lock is required when updating
@@ -230,6 +257,15 @@ void OpenGLESPage::RecoverFromLostDevice()
     StartRenderLoop();
 }
 
+void OpenGLESPage::TerminateApp()
+{
+    {
+        critical_section::scoped_lock lock(mRenderSurfaceCriticalSection);
+        DestroyRenderSurface();
+    }
+    Windows::UI::Xaml::Application::Current->Exit();
+}
+
 void OpenGLESPage::StartRenderLoop()
 {
     // If the render loop is already running then do not start another thread.
@@ -253,8 +289,6 @@ void OpenGLESPage::StartRenderLoop()
         GLsizei panelWidth = 0;
         GLsizei panelHeight = 0;
         GetSwapChainPanelSize(&panelWidth, &panelHeight);
-        
-
 
         if (m_renderer.get() == nullptr)
         {
@@ -283,6 +317,11 @@ void OpenGLESPage::StartRenderLoop()
             {
                 m_deviceLost = true;
 
+                if (m_renderer)
+                {
+                    m_renderer->Pause();
+                }
+
                 // XAML objects like the SwapChainPanel must only be manipulated on the UI thread.
                 swapChainPanel->Dispatcher->RunAsync(Windows::UI::Core::CoreDispatcherPriority::High, ref new Windows::UI::Core::DispatchedHandler([=]()
                 {
@@ -291,6 +330,22 @@ void OpenGLESPage::StartRenderLoop()
 
                 return;
             }
+
+            // run on main UI thread
+            if (m_renderer->AppShouldExit())
+            {
+                swapChainPanel->Dispatcher->RunAsync(Windows::UI::Core::CoreDispatcherPriority::Normal, ref new DispatchedHandler([this]()
+                {
+                    TerminateApp();
+                }));
+
+                return;
+            }
+        }
+
+        if (m_renderer)
+        {
+            m_renderer->Pause();
         }
     });
 
@@ -304,10 +359,5 @@ void OpenGLESPage::StopRenderLoop()
     {
         mRenderLoopWorker->Cancel();
         mRenderLoopWorker = nullptr;
-    }
-
-    if (m_renderer)
-    {
-        m_renderer->Pause();
     }
 }

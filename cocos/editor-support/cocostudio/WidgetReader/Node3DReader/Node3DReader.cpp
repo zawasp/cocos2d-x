@@ -77,7 +77,7 @@ namespace cocostudio
         if(!attribute)
             return Vec3::ZERO;
         
-        Vec3 ret(Vec3::ZERO);
+        Vec3 ret;
         std::string attriname;
         
         while (attribute)
@@ -110,9 +110,9 @@ namespace cocostudio
         auto temp = NodeReader::getInstance()->createOptionsWithFlatBuffers(objectData, builder);
         auto nodeOptions = *(Offset<WidgetOptions>*)(&temp);
         
-        Vec3 position(Vec3::ZERO);
-        Vec3 rotation(Vec3::ZERO);
-        Vec3 scale(Vec3::ZERO);
+        Vec3 position;
+        Vec3 rotation;
+        Vec3 scale;
         int cameraMask = 0;
 
         std::string attriname;
@@ -172,6 +172,9 @@ namespace cocostudio
     {
         auto options = (Node3DOption*)node3DOptions;
         
+        auto nodeReader = NodeReader::getInstance();
+        nodeReader->setPropsWithFlatBuffers(node, (Table*)(options->nodeOptions()));
+        
         const Vector3* position = options->position3D();
         const Vector3* rotation = options->rotation3D();
         const Vector3* scale = options->scale3D();
@@ -195,9 +198,6 @@ namespace cocostudio
         }
         
         node->setCameraMask(cameraMask, true);
-        
-        auto nodeReader = NodeReader::getInstance();
-        nodeReader->setPropsWithFlatBuffers(node, (Table*)(options->nodeOptions()));
     }
     
     Node* Node3DReader::createNodeWithFlatBuffers(const flatbuffers::Table *node3DOptions)
