@@ -257,7 +257,7 @@ public:
 
 protected:
     UserDefault();
-    ~UserDefault();
+    virtual ~UserDefault();
     
 private:
     

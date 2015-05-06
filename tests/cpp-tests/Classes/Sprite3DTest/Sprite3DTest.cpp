@@ -24,15 +24,6 @@
  ****************************************************************************/
 
 #include "Sprite3DTest.h"
-#include "base/CCAsyncTaskPool.h"
-#include "3d/CCAnimation3D.h"
-#include "3d/CCAnimate3D.h"
-#include "3d/CCAttachNode.h"
-#include "3d/CCRay.h"
-#include "3d/CCSprite3D.h"
-#include "3d/CCTextureCube.h"
-#include "3d/CCSkybox.h"
-#include "renderer/CCVertexIndexBuffer.h"
 #include "DrawNode3D.h"
 
 #include <algorithm>
@@ -1265,7 +1256,7 @@ Sprite3DWithSkinTest::Sprite3DWithSkinTest()
     _menuItem->setPosition(VisibleRect::left().x + 50, VisibleRect::top().y -70);
     addChild(menu, 1);
     
-    _highQuality = true;
+    _animateQuality = (int)Animate3DQuality::QUALITY_HIGH;
     _sprits.clear();
     
     auto s = Director::getInstance()->getWinSize();
@@ -1308,7 +1299,7 @@ void Sprite3DWithSkinTest::addNewSpriteWithCoords(Vec2 p)
         }
         animate->setSpeed(inverse ? -speed : speed);
         animate->setTag(110);
-        animate->setHighQuality(_highQuality);
+        animate->setQuality((Animate3DQuality)_animateQuality);
         auto repeate = RepeatForever::create(animate);
         repeate->setTag(110);
         sprite->runAction(repeate);
@@ -1317,18 +1308,22 @@ void Sprite3DWithSkinTest::addNewSpriteWithCoords(Vec2 p)
 
 void Sprite3DWithSkinTest::switchAnimationQualityCallback(Ref* sender)
 {
-    _highQuality = !_highQuality;
+    ++_animateQuality;
+    if (_animateQuality > (int)Animate3DQuality::QUALITY_HIGH)
+        _animateQuality = (int)Animate3DQuality::QUALITY_NONE;
     
-    if (_highQuality)
-        _menuItem->setString("High Quality");
-    else
+    if (_animateQuality == (int)Animate3DQuality::QUALITY_NONE)
+        _menuItem->setString("None Quality");
+    else if (_animateQuality == (int)Animate3DQuality::QUALITY_LOW)
         _menuItem->setString("Low Quality");
+    else if (_animateQuality == (int)Animate3DQuality::QUALITY_HIGH)
+        _menuItem->setString("High Quality");
     
     for (auto iter: _sprits)
     {
         RepeatForever* repAction = dynamic_cast<RepeatForever*>(iter->getActionByTag(110));
         Animate3D* animate3D = dynamic_cast<Animate3D*>(repAction->getInnerAction());
-        animate3D->setHighQuality(_highQuality);
+        animate3D->setQuality((Animate3DQuality)_animateQuality);
     }
 }
 
@@ -2182,8 +2177,8 @@ void UseCaseSprite3D::switchCase()
         circleBack->setScale(0.5f);
         circleBack->addChild(circle);
         circle->runAction(RepeatForever::create(RotateBy::create(3, Vec3(0.f, 0.f, 360.f))));
-        
-        circleBack->setRotation3D(Vec3(90, 0, 0));
+
+        circleBack->setRotation3D(Vec3(90, 90, 0));
         
         auto pos = sprite->getPosition3D();
         circleBack->setPosition3D(Vec3(pos.x, pos.y, pos.z - 1));
@@ -2440,8 +2435,8 @@ void Sprite3DCubeMapTest::addNewSpriteWithCoords(Vec2 p)
     Texture2D::TexParams tRepeatParams;
     tRepeatParams.magFilter = GL_LINEAR;
     tRepeatParams.minFilter = GL_LINEAR;
-    tRepeatParams.wrapS = GL_MIRRORED_REPEAT;
-    tRepeatParams.wrapT = GL_MIRRORED_REPEAT;
+    tRepeatParams.wrapS = GL_CLAMP_TO_EDGE;
+    tRepeatParams.wrapT = GL_CLAMP_TO_EDGE;
     _textureCube->setTexParameters(tRepeatParams);
 
     // pass the texture sampler to our custom shader
@@ -2501,8 +2496,8 @@ void Sprite3DCubeMapTest::addNewSpriteWithCoords(Vec2 p)
         Texture2D::TexParams tRepeatParams;
         tRepeatParams.magFilter = GL_NEAREST;
         tRepeatParams.minFilter = GL_NEAREST;
-        tRepeatParams.wrapS = GL_MIRRORED_REPEAT;
-        tRepeatParams.wrapT = GL_MIRRORED_REPEAT;
+        tRepeatParams.wrapS = GL_CLAMP_TO_EDGE;
+        tRepeatParams.wrapT = GL_CLAMP_TO_EDGE;
         _textureCube->setTexParameters(tRepeatParams);
         state->setUniformTexture("u_cubeTex", _textureCube);
 
