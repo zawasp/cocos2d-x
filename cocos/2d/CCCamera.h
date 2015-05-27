@@ -26,6 +26,8 @@ THE SOFTWARE.
 
 #include "2d/CCNode.h"
 #include "3d/CCFrustum.h"
+#include "renderer/CCQuadCommand.h"
+#include "renderer/CCCustomCommand.h"
 
 NS_CC_BEGIN
 
@@ -170,6 +172,16 @@ public:
      */
     int getDepth() const { return _depth; }
     
+    /**
+     * Get the frustum's far plane.
+     */
+    float getFarPlane() const { return _farPlane; }
+
+    /**
+     * Get the frustum's near plane.
+     */
+    float getNearPlane() const { return _nearPlane; }
+    
     //override
     virtual void onEnter() override;
     virtual void onExit() override;
@@ -183,7 +195,9 @@ public:
      * Get the default camera of the current running scene.
      */
     static Camera* getDefaultCamera();
-
+    
+    void clearBackground(float depth);
+    
 CC_CONSTRUCTOR_ACCESS:
     Camera();
     ~Camera();
@@ -200,7 +214,7 @@ CC_CONSTRUCTOR_ACCESS:
     bool initDefault();
     bool initPerspective(float fieldOfView, float aspectRatio, float nearPlane, float farPlane);
     bool initOrthographic(float zoomX, float zoomY, float nearPlane, float farPlane);
-
+    
 protected:
 
     Scene* _scene; //Scene camera belongs to
