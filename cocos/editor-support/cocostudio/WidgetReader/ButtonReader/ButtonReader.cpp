@@ -930,6 +930,8 @@ namespace cocostudio
             Size contentSize(options->widgetOptions()->size()->width(), options->widgetOptions()->size()->height());
             button->setContentSize(contentSize);
         }
+
+        button->setBright(displaystate);
     }
     
     Node* ButtonReader::createNodeWithFlatBuffers(const flatbuffers::Table *buttonOptions)
