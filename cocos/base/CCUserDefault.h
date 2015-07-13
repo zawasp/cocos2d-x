@@ -214,6 +214,13 @@ public:
      */
     virtual void flush();
 
+    /**
+    * delete any value by key,
+    * @param key The key to delete value.
+    * @js NA
+    */
+    virtual void deleteValueForKey(const char* key);
+    
     /** Returns the singleton.
      * @js NA
      * @lua NA
@@ -250,7 +257,7 @@ public:
      */
     static const std::string& getXMLFilePath();
     /** All supported platforms other iOS & Android and CC_PLATFORM_WINRT use xml file to save values. This function checks whether the xml file exists or not.
-     * @return True if the xml file exists, flase if not.
+     * @return True if the xml file exists, false if not.
      * @js NA
      */
     static bool isXMLFileExist();

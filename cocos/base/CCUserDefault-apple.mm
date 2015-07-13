@@ -1,19 +1,19 @@
 /****************************************************************************
  Copyright (c) 2010-2012 cocos2d-x.org
  Copyright (c) 2013-2014 Chukong Technologies Inc.
- 
+
  http://www.cocos2d-x.org
- 
+
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the Software is
  furnished to do so, subject to the following conditions:
- 
+
  The above copyright notice and this permission notice shall be included in
  all copies or substantial portions of the Software.
- 
+
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -61,18 +61,18 @@ static tinyxml2::XMLElement* getXMLNodeForKey(const char* pKey, tinyxml2::XMLDoc
 {
     tinyxml2::XMLElement* curNode = nullptr;
     tinyxml2::XMLElement* rootNode = nullptr;
-    
+
     if (! UserDefault::isXMLFileExist())
     {
         return nullptr;
     }
-    
+
     // check the key value
     if (! pKey)
     {
         return nullptr;
     }
-    
+
     do
     {
  		tinyxml2::XMLDocument* xmlDoc = new tinyxml2::XMLDocument();
@@ -100,10 +100,10 @@ static tinyxml2::XMLElement* getXMLNodeForKey(const char* pKey, tinyxml2::XMLDoc
         {
             // There is not xml node, delete xml file.
             remove(UserDefault::getInstance()->getXMLFilePath().c_str());
-            
+
             return nullptr;
         }
-        
+
 		while (nullptr != curNode)
 		{
 			const char* nodeName = curNode->Value();
@@ -112,11 +112,11 @@ static tinyxml2::XMLElement* getXMLNodeForKey(const char* pKey, tinyxml2::XMLDoc
                 // delete the node
 				break;
 			}
-            
+
 			curNode = curNode->NextSiblingElement();
 		}
 	} while (0);
-    
+
 	return curNode;
 }
 
@@ -197,14 +197,14 @@ bool UserDefault::getBoolForKey(const char* pKey, bool defaultValue)
         {
             const char* value = (const char*)node->FirstChild()->Value();
             bool ret = (! strcmp(value, "true"));
-            
+
             // set value in NSUserDefaults
             setBoolForKey(pKey, ret);
             flush();
-            
+
             // delete xmle node
             deleteNode(doc, node);
-            
+
             return ret;
         }
         else
@@ -214,15 +214,15 @@ bool UserDefault::getBoolForKey(const char* pKey, bool defaultValue)
         }
     }
 #endif
-    
+
     bool ret = defaultValue;
-    
+
     NSNumber *value = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithUTF8String:pKey]];
     if (value)
     {
         ret = [value boolValue];
     }
-    
+
     return ret;
 }
 
@@ -241,14 +241,14 @@ int UserDefault::getIntegerForKey(const char* pKey, int defaultValue)
         if (node->FirstChild())
         {
             int ret = atoi((const char*)node->FirstChild()->Value());
-            
+
             // set value in NSUserDefaults
             setIntegerForKey(pKey, ret);
             flush();
-            
+
             // delete xmle node
             deleteNode(doc, node);
-            
+
             return ret;
         }
         else
@@ -258,15 +258,15 @@ int UserDefault::getIntegerForKey(const char* pKey, int defaultValue)
         }
     }
 #endif
-    
+
     int ret = defaultValue;
-    
+
     NSNumber *value = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithUTF8String:pKey]];
     if (value)
     {
         ret = [value intValue];
     }
-    
+
     return ret;
 }
 
@@ -285,14 +285,14 @@ float UserDefault::getFloatForKey(const char* pKey, float defaultValue)
         if (node->FirstChild())
         {
             float ret = atof((const char*)node->FirstChild()->Value());
-            
+
             // set value in NSUserDefaults
             setFloatForKey(pKey, ret);
             flush();
-            
+
             // delete xmle node
             deleteNode(doc, node);
-            
+
             return ret;
         }
         else
@@ -302,15 +302,15 @@ float UserDefault::getFloatForKey(const char* pKey, float defaultValue)
         }
     }
 #endif
-    
+
     float ret = defaultValue;
-    
+
     NSNumber *value = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithUTF8String:pKey]];
     if (value)
     {
         ret = [value floatValue];
     }
-    
+
     return ret;
 }
 
@@ -329,14 +329,14 @@ double UserDefault::getDoubleForKey(const char* pKey, double defaultValue)
         if (node->FirstChild())
         {
             double ret = atof((const char*)node->FirstChild()->Value());
-            
+
             // set value in NSUserDefaults
             setDoubleForKey(pKey, ret);
             flush();
-            
+
             // delete xmle node
             deleteNode(doc, node);
-            
+
             return ret;
         }
         else
@@ -346,15 +346,15 @@ double UserDefault::getDoubleForKey(const char* pKey, double defaultValue)
         }
     }
 #endif
-    
+
 	double ret = defaultValue;
-    
+
     NSNumber *value = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithUTF8String:pKey]];
     if (value)
     {
         ret = [value doubleValue];
     }
-    
+
     return ret;
 }
 
@@ -373,14 +373,14 @@ string UserDefault::getStringForKey(const char* pKey, const std::string & defaul
         if (node->FirstChild())
         {
             string ret = (const char*)node->FirstChild()->Value();
-            
+
             // set value in NSUserDefaults
             setStringForKey(pKey, ret);
             flush();
-            
+
             // delete xmle node
             deleteNode(doc, node);
-            
+
             return ret;
         }
         else
@@ -390,7 +390,7 @@ string UserDefault::getStringForKey(const char* pKey, const std::string & defaul
         }
     }
 #endif
-    
+
     NSString *str = [[NSUserDefaults standardUserDefaults] stringForKey:[NSString stringWithUTF8String:pKey]];
     if (! str)
     {
@@ -423,15 +423,15 @@ Data UserDefault::getDataForKey(const char* pKey, const Data& defaultValue)
             if (decodedData) {
                 Data ret;
                 ret.fastSet(decodedData, decodedDataLen);
-                
+
                 // set value in NSUserDefaults
                 setDataForKey(pKey, ret);
-                
+
                 flush();
-                
+
                 // delete xmle node
                 deleteNode(doc, node);
-                
+
                 return ret;
             }
         }
@@ -442,7 +442,7 @@ Data UserDefault::getDataForKey(const char* pKey, const Data& defaultValue)
         }
     }
 #endif
-    
+
     NSData *data = [[NSUserDefaults standardUserDefaults] dataForKey:[NSString stringWithUTF8String:pKey]];
     if (! data)
     {
@@ -461,7 +461,7 @@ void UserDefault::setBoolForKey(const char* pKey, bool value)
 #ifdef KEEP_COMPATABILITY
     deleteNodeByKey(pKey);
 #endif
-    
+
     [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:value] forKey:[NSString stringWithUTF8String:pKey]];
 }
 
@@ -470,7 +470,7 @@ void UserDefault::setIntegerForKey(const char* pKey, int value)
 #ifdef KEEP_COMPATABILITY
     deleteNodeByKey(pKey);
 #endif
-    
+
     [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInt:value] forKey:[NSString stringWithUTF8String:pKey]];
 }
 
@@ -479,7 +479,7 @@ void UserDefault::setFloatForKey(const char* pKey, float value)
 #ifdef KEEP_COMPATABILITY
     deleteNodeByKey(pKey);
 #endif
-    
+
     [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithFloat:value] forKey:[NSString stringWithUTF8String:pKey]];
 }
 
@@ -488,7 +488,7 @@ void UserDefault::setDoubleForKey(const char* pKey, double value)
 #ifdef KEEP_COMPATABILITY
     deleteNodeByKey(pKey);
 #endif
-    
+
     [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithDouble:value] forKey:[NSString stringWithUTF8String:pKey]];
 }
 
@@ -497,7 +497,7 @@ void UserDefault::setStringForKey(const char* pKey, const std::string & value)
 #ifdef KEEP_COMPATABILITY
     deleteNodeByKey(pKey);
 #endif
-    
+
     [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithUTF8String:value.c_str()] forKey:[NSString stringWithUTF8String:pKey]];
 }
 
@@ -505,12 +505,12 @@ void UserDefault::setDataForKey(const char* pKey, const Data& value) {
 #ifdef KEEP_COMPATABILITY
     deleteNodeByKey(pKey);
 #endif
-        
+
     [[NSUserDefaults standardUserDefaults] setObject:[NSData dataWithBytes: value.getBytes() length: value.getSize()] forKey:[NSString stringWithUTF8String:pKey]];
 }
 
 UserDefault* UserDefault::getInstance()
-{    
+{
     if (! _userDefault)
     {
 #ifdef KEEP_COMPATABILITY
@@ -518,7 +518,7 @@ UserDefault* UserDefault::getInstance()
 #endif
         _userDefault = new (std::nothrow) UserDefault();
     }
-    
+
     return _userDefault;
 }
 
@@ -554,7 +554,7 @@ void UserDefault::initXMLFilePath()
         NSString *documentsDirectory = [paths objectAtIndex:0];
         _filePath = [documentsDirectory UTF8String];
         _filePath.append("/");
-        
+
         _filePath +=  XML_FILE_NAME;
         _isFilePathInitialized = true;
     }
@@ -577,6 +577,18 @@ void UserDefault::flush()
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
+void UserDefault::deleteValueForKey(const char* key)
+{
+    // check the params
+    if (!key)
+    {
+        CCLOG("the key is invalid");
+    }
+
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:[NSString stringWithUTF8String:key]];
+
+    flush();
+}
 
 NS_CC_END
 

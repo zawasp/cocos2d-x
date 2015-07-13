@@ -886,7 +886,7 @@ namespace cocostudio
         button->setBright(displaystate);
         button->setEnabled(displaystate);
         
-        bool outlineEnabled = options->outlineEnabled();
+        bool outlineEnabled = options->outlineEnabled() != 0;
         if (outlineEnabled)
         {
             auto f_outlineColor = options->outlineColor();
@@ -898,7 +898,7 @@ namespace cocostudio
             }
         }
         
-        bool shadowEnabled = options->shadowEnabled();
+        bool shadowEnabled = options->shadowEnabled() != 0;
         if (shadowEnabled)
         {
             auto f_shadowColor = options->shadowColor();

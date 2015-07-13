@@ -236,7 +236,7 @@ void Widget::onExit()
 
 void Widget::visit(Renderer *renderer, const Mat4 &parentTransform, uint32_t parentFlags)
 {
-    if (_visible || !isVisitableByVisitingCamera())
+    if (_visible)
     {
         adaptRenderers();
         ProtectedNode::visit(renderer, parentTransform, parentFlags);
@@ -783,7 +783,9 @@ void Widget::propagateTouchEvent(cocos2d::ui::Widget::TouchEventType event, coco
     Widget* widgetParent = getWidgetParent();
     if (widgetParent)
     {
+        widgetParent->_hittedByCamera = _hittedByCamera;
         widgetParent->interceptTouchEvent(event, sender, touch);
+        widgetParent->_hittedByCamera = nullptr;
     }
 }
 
@@ -974,7 +976,9 @@ void Widget::interceptTouchEvent(cocos2d::ui::Widget::TouchEventType event, coco
     Widget* widgetParent = getWidgetParent();
     if (widgetParent)
     {
+        widgetParent->_hittedByCamera = _hittedByCamera;
         widgetParent->interceptTouchEvent(event,sender,touch);
+        widgetParent->_hittedByCamera = nullptr;
     }
 
 }
