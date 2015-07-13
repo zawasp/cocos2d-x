@@ -157,6 +157,33 @@ void UserDefault::destroyInstance()
    CC_SAFE_DELETE(_userDefault);
 }
 
+bool UserDefault::keyExists(const char* pKey)
+{
+    const char* value = nullptr;
+    tinyxml2::XMLDocument* doc = nullptr;
+    tinyxml2::XMLElement* node = getXMLNodeForKey(pKey, &doc);
+    if (node && node->FirstChild())
+    {
+        value = (const char*)(node->FirstChild()->Value());
+    }
+
+    bool ret = false;
+
+    if (value)
+    {
+        ret = true;
+    }
+
+    if (doc) delete doc;
+
+    return ret;
+}
+
+void UserDefault::deleteKey(const char* pKey)
+{
+    deleteNodeByKey(pKey);
+}
+
 bool UserDefault::getBoolForKey(const char* pKey)
 {
     return getBoolForKey(pKey, false);
