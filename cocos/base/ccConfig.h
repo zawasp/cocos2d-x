@@ -255,7 +255,14 @@ THE SOFTWARE.
 /** Use 3d physics integration API. */
 #ifndef CC_USE_3D_PHYSICS
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_MAC || CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_LINUX || CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
-#define CC_USE_3D_PHYSICS 0
+#define CC_USE_3D_PHYSICS 1
+#endif
+#endif
+
+#if (CC_USE_3D_PHYSICS)
+/** Use bullet physics engine. */
+#ifndef CC_ENABLE_BULLET_INTEGRATION
+#define CC_ENABLE_BULLET_INTEGRATION 1
 #endif
 #endif
 
@@ -278,20 +285,20 @@ THE SOFTWARE.
 /** Support JPEG or not. If your application don't use jpeg format picture, you can undefine this macro to save package size.
  */
 #ifndef CC_USE_JPEG
-#define CC_USE_JPEG  0
+#define CC_USE_JPEG  1
 #endif // CC_USE_JPEG
 
 /** Support TIFF or not. If your application don't use TIFF format picture, you can undefine this macro to save package size.
  */
 #ifndef CC_USE_TIFF
-#define CC_USE_TIFF  0
+#define CC_USE_TIFF  1
 #endif // CC_USE_TIFF
 
 /** Support webp or not. If your application don't use webp format picture, you can undefine this macro to save package size.
  */
 #ifndef CC_USE_WEBP
 #if (CC_TARGET_PLATFORM != CC_PLATFORM_WINRT)
-#define CC_USE_WEBP  0
+#define CC_USE_WEBP  1
 #endif
 #endif // CC_USE_WEBP
 
