@@ -24,12 +24,12 @@ THE SOFTWARE.
 ****************************************************************************/
 
 #include "2d/CCFontFreeType.h"
-
+#include FT_BBOX_H
+#include "edtaa3func.h"
+#include "CCFontAtlas.h"
 #include "base/CCDirector.h"
 #include "base/ccUTF8.h"
 #include "platform/CCFileUtils.h"
-#include "edtaa3func.h"
-#include FT_BBOX_H
 
 NS_CC_BEGIN
 
@@ -99,6 +99,7 @@ FontFreeType::FontFreeType(bool distanceFieldEnabled /* = false */,int outline /
 , _outlineSize(0.0f)
 , _lineHeight(0)
 , _fontAtlas(nullptr)
+, _encoding(FT_ENCODING_UNICODE)
 {
     if (outline > 0)
     {
@@ -154,7 +155,8 @@ bool FontFreeType::createFontObject(const std::string &fontName, int fontSize)
             return false;
         }
 
-        if (FT_Select_Charmap(face, face->charmaps[foundIndex]->encoding))
+        _encoding = face->charmaps[foundIndex]->encoding;
+        if (FT_Select_Charmap(face, _encoding))
         {
             return false;
         }
