@@ -50,6 +50,9 @@
     <ClCompile Include="..\auto\jsb_cocos2dx_auto.cpp">
       <Filter>auto</Filter>
     </ClCompile>
+    <ClCompile Include="..\auto\jsb_cocos2dx_audioengine_auto.cpp">
+      <Filter>auto</Filter>
+    </ClCompile>
     <ClCompile Include="..\manual\js_manual_conversions.cpp">
       <Filter>manual</Filter>
     </ClCompile>
@@ -161,12 +164,12 @@
     <ClCompile Include="..\manual\navmesh\jsb_cocos2dx_navmesh_conversions.cpp">
       <Filter>manual\navmesh</Filter>
     </ClCompile>
-    <ClCompile Include="..\manual\3d\jsb_cocos2dx_3d_conversions.cpp">
-      <Filter>manual\3d</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\auto\jsb_cocos2dx_auto.hpp">
+      <Filter>auto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\auto\jsb_cocos2dx_audioengine_auto.hpp">
       <Filter>auto</Filter>
     </ClInclude>
     <ClInclude Include="..\manual\js_bindings_opengl.h">
@@ -300,9 +303,6 @@
     </ClInclude>
     <ClInclude Include="..\manual\navmesh\jsb_cocos2dx_navmesh_conversions.h">
       <Filter>manual\navmesh</Filter>
-    </ClInclude>
-    <ClInclude Include="..\manual\3d\jsb_cocos2dx_3d_conversions.h">
-      <Filter>manual\3d</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -35,6 +35,7 @@ endif()
 
 set(JSBINDING_SRC
   auto/jsb_cocos2dx_auto.cpp
+  auto/jsb_cocos2dx_audioengine_auto.cpp
   auto/jsb_cocos2dx_builder_auto.cpp
   auto/jsb_cocos2dx_extension_auto.cpp
   auto/jsb_cocos2dx_spine_auto.cpp
@@ -69,7 +70,6 @@ set(JSBINDING_SRC
   manual/spine/jsb_cocos2dx_spine_manual.cpp
   manual/ui/jsb_cocos2dx_ui_manual.cpp
   manual/3d/jsb_cocos2dx_3d_manual.cpp
-  manual/3d/jsb_cocos2dx_3d_conversions.cpp
   manual/physics3d/jsb_cocos2dx_physics3d_manual.cpp
   manual/navmesh/jsb_cocos2dx_navmesh_conversions.cpp
   manual/navmesh/jsb_cocos2dx_navmesh_manual.cpp

@@ -1,5 +1,4 @@
 /*
- * Created by Huabin LING on 17/6/15.
  * Copyright (c) 2015 Chukong Technologies Inc.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -21,15 +20,18 @@
  * THE SOFTWARE.
  */
 
-#include "base/ccConfig.h"
-#if CC_USE_3D_PHYSICS && CC_ENABLE_BULLET_INTEGRATION
-#ifndef __cocos2d_js_bindings__jsb_cocos2dx_3d_conversions__
-#define __cocos2d_js_bindings__jsb_cocos2dx_3d_conversions__
+(function (jsb) {
 
-#include "jsapi.h"
-#include "CCPhysics3DObject.h"
+if (!jsb || !jsb.AudioEngine) return;
 
-bool jsval_to_Physics3DRigidBodyDes(JSContext *cx, JS::HandleValue v, cocos2d::Physics3DRigidBodyDes** bodyDes);
+jsb.AudioEngine.AudioState = {
+    ERROR: -1,
+    INITIALZING: 0,
+    PLAYING: 1,
+    PAUSED: 2
+};
 
-#endif /* defined(__cocos2d_js_bindings__jsb_cocos2dx_3d_conversions__) */
-#endif //#if CC_USE_3d
+jsb.AudioEngine.INVALID_AUDIO_ID = -1;
+jsb.AudioEngine.TIME_UNKNOWN = -1;
+
+})(jsb);

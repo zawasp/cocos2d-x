@@ -402,7 +402,9 @@ void Node::updateRotation3D()
     //convert quaternion to Euler angle
     float x = _rotationQuat.x, y = _rotationQuat.y, z = _rotationQuat.z, w = _rotationQuat.w;
     _rotationX = atan2f(2.f * (w * x + y * z), 1.f - 2.f * (x * x + y * y));
-    _rotationY = asinf(2.f * (w * y - z * x));
+    float sy = 2.f * (w * y - z * x);
+    sy = clampf(sy, -1, 1);
+    _rotationY = asinf(sy);
     _rotationZ_X = atan2f(2.f * (w * z + x * y), 1.f - 2.f * (y * y + z * z));
     
     _rotationX = CC_RADIANS_TO_DEGREES(_rotationX);
@@ -1769,6 +1771,28 @@ AffineTransform Node::getNodeToParentAffineTransform() const
     return ret;
 }
 
+
+Mat4 Node::getNodeToParentTransform(Node* ancestor) const
+{
+    Mat4 t(this->getNodeToParentTransform());
+
+    for (Node *p = _parent;  p != nullptr && p != ancestor ; p = p->getParent())
+    {
+        t = p->getNodeToParentTransform() * t;
+    }
+
+    return t;
+}
+
+AffineTransform Node::getNodeToParentAffineTransform(Node* ancestor) const
+{
+    AffineTransform t(this->getNodeToParentAffineTransform());
+
+    for (Node *p = _parent; p != nullptr && p != ancestor; p = p->getParent())
+        t = AffineTransformConcat(t, p->getNodeToParentAffineTransform());
+
+    return t;
+}
 const Mat4& Node::getNodeToParentTransform() const
 {
     if (_transformDirty)
@@ -1924,24 +1948,12 @@ const Mat4& Node::getParentToNodeTransform() const
 
 AffineTransform Node::getNodeToWorldAffineTransform() const
 {
-    AffineTransform t(this->getNodeToParentAffineTransform());
-
-    for (Node *p = _parent; p != nullptr; p = p->getParent())
-        t = AffineTransformConcat(t, p->getNodeToParentAffineTransform());
-
-    return t;
+    return this->getNodeToParentAffineTransform(nullptr);
 }
 
 Mat4 Node::getNodeToWorldTransform() const
 {
-    Mat4 t(this->getNodeToParentTransform());
-
-    for (Node *p = _parent; p != nullptr; p = p->getParent())
-    {
-        t = p->getNodeToParentTransform() * t;
-    }
-
-    return t;
+    return this->getNodeToParentTransform(nullptr);
 }
 
 AffineTransform Node::getWorldToNodeAffineTransform() const

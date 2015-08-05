@@ -43,6 +43,7 @@ LOCAL_SRC_FILES := ../auto/jsb_cocos2dx_3d_auto.cpp \
                    ../auto/jsb_cocos2dx_navmesh_auto.cpp \
                    ../auto/jsb_cocos2dx_spine_auto.cpp \
                    ../auto/jsb_cocos2dx_auto.cpp \
+                   ../auto/jsb_cocos2dx_audioengine_auto.cpp \
                    ../auto/jsb_cocos2dx_studio_auto.cpp \
                    ../auto/jsb_cocos2dx_builder_auto.cpp \
                    ../auto/jsb_cocos2dx_ui_auto.cpp \
@@ -57,7 +58,6 @@ LOCAL_SRC_FILES := ../auto/jsb_cocos2dx_3d_auto.cpp \
                    ../manual/jsb_opengl_registration.cpp \
                    ../manual/jsb_event_dispatcher_manual.cpp \
                    ../manual/3d/jsb_cocos2dx_3d_manual.cpp \
-                   ../manual/3d/jsb_cocos2dx_3d_conversions.cpp \
                    ../manual/experimental/jsb_cocos2dx_experimental_video_manual.cpp \
                    ../manual/experimental/jsb_cocos2dx_experimental_webView_manual.cpp \
                    ../manual/chipmunk/js_bindings_chipmunk_auto_classes.cpp \
