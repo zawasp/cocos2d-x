@@ -164,7 +164,7 @@ bool FontAtlas::getLetterDefinitionForChar(char16_t utf16Char, FontLetterDefinit
     if (outIterator != _letterDefinitions.end())
     {
         letterDefinition = (*outIterator).second;
-        return true;
+        return letterDefinition.validDefinition;
     }
     else
     {
@@ -251,7 +251,7 @@ void FontAtlas::findNewCharacters(const std::u16string& u16Text, std::unordered_
     else
     {
         auto length = u16Text.length();
-        newChars.resize(length);
+        newChars.reserve(length);
         for (size_t i = 0; i < length; ++i)
         {
             auto outIterator = _letterDefinitions.find(u16Text[i]);

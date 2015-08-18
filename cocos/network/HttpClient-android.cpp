@@ -24,6 +24,9 @@
  THE SOFTWARE.
  ****************************************************************************/
 
+#include "platform/CCPlatformConfig.h"
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+
 #include "HttpClient.h"
 
 #include <queue>
@@ -582,11 +585,7 @@ private:
             return nullptr;
         }
         char *ret = nullptr;
-        std::string strValue = "";
-        if (!cocos2d::StringUtils::getUTFCharsFromJavaEnv(env, jstr, strValue))
-        {
-            strValue = "";
-        }
+        std::string strValue = cocos2d::StringUtils::getStringUTFCharsJNI(env, jstr);
         ret = strdup(strValue.c_str());
         return ret;
     }
@@ -1054,4 +1053,4 @@ const std::string& HttpClient::getSSLVerification()
 
 NS_CC_END
 
-
+#endif // #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)

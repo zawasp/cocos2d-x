@@ -23,7 +23,7 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-var UITextFieldTest = UIScene.extend({
+var UITextFieldTest = UIMainLayer.extend({
     init: function () {
         if (this._super()) {
             var widgetSize = this._widget.getContentSize();
@@ -37,7 +37,6 @@ var UITextFieldTest = UIScene.extend({
             this._bottomDisplayLabel.setColor(cc.color(255, 255, 255, 255));
 
             // Create the textfield
-            cc.director.getOpenGLView().setIMEKeyboardState(true);
             var textField = new ccui.TextField("PlaceHolder", "Marker Felt", 30);
             textField.x = widgetSize.width / 2.0;
             textField.y = widgetSize.height / 2.0;
@@ -74,7 +73,7 @@ var UITextFieldTest = UIScene.extend({
     }
 });
 
-var UITextFieldTest_MaxLength = UIScene.extend({
+var UITextFieldTest_MaxLength = UIMainLayer.extend({
     init: function () {
         if (this._super()) {
             var widgetSize = this._widget.getContentSize();
@@ -126,7 +125,7 @@ var UITextFieldTest_MaxLength = UIScene.extend({
     }
 });
 
-var UITextFieldTest_Password = UIScene.extend({
+var UITextFieldTest_Password = UIMainLayer.extend({
     init: function () {
         if (this._super()) {
             var widgetSize = this._widget.getContentSize();
@@ -178,7 +177,7 @@ var UITextFieldTest_Password = UIScene.extend({
 });
 
 //2015-01-14
-var UITextFieldTest_LineWrap = UIScene.extend({
+var UITextFieldTest_LineWrap = UIMainLayer.extend({
 
     init: function(){
         if (this._super()) {
@@ -239,7 +238,7 @@ var UITextFieldTest_LineWrap = UIScene.extend({
 });
 
 //2015-01-14
-var UITextFieldTest_TrueTypeFont = UIScene.extend({
+var UITextFieldTest_TrueTypeFont = UIMainLayer.extend({
     init: function(){
         if (this._super()) {
             var widgetSize = this._widget.getContentSize();
@@ -290,7 +289,7 @@ var UITextFieldTest_TrueTypeFont = UIScene.extend({
 });
 
 //2015-01-14
-var UITextFieldTest_PlaceHolderColor = UIScene.extend({
+var UITextFieldTest_PlaceHolderColor = UIMainLayer.extend({
     init: function(){
         if (this._super()) {
             var widgetSize = this._widget.getContentSize();

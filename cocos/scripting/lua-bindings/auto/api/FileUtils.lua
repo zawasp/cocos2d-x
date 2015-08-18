@@ -80,18 +80,15 @@
 -- @return bool#bool ret (return value: bool)
         
 --------------------------------
--- Renames a file under the given directory.<br>
--- param path     The parent directory path of the file, it must be an absolute path.<br>
--- param oldname  The current name of the file.<br>
--- param name     The new name of the file.<br>
--- return True if the file have been renamed successfully, false if not.
--- @function [parent=#FileUtils] renameFile 
+-- @overload self, string, string         
+-- @overload self, string, string, string         
+-- @function [parent=#FileUtils] renameFile
 -- @param self
 -- @param #string path
 -- @param #string oldname
 -- @param #string name
 -- @return bool#bool ret (return value: bool)
-        
+
 --------------------------------
 -- Loads the filenameLookup dictionary from the contents of a filename.<br>
 -- note The plist file name should follow the format below:<br>
@@ -320,6 +317,16 @@
 -- @param #map_table dict
 -- @param #string fullPath
 -- @return bool#bool ret (return value: bool)
+        
+--------------------------------
+-- Gets filename extension is a suffix (separated from the base filename by a dot) in lower case.<br>
+-- Examples of filename extensions are .png, .jpeg, .exe, .dmg and .txt.<br>
+-- param filePath The path of the file, it could be a relative or absolute path.<br>
+-- return suffix for filename in lower case or empty if a dot not found.
+-- @function [parent=#FileUtils] getFileExtension 
+-- @param self
+-- @param #string filePath
+-- @return string#string ret (return value: string)
         
 --------------------------------
 -- Sets writable path.
