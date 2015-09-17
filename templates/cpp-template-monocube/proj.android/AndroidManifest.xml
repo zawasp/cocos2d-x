@@ -45,9 +45,8 @@
             </intent-filter>
         </activity>
 
-        <meta-data
-            android:name="android.app.lib_name"
-            android:value="cocos2dcpp" />
+        <!-- Tell Cocos2dxActivity the name of our .so -->
+        <meta-data android:name="android.app.lib_name"
     </application>
 
 </manifest>

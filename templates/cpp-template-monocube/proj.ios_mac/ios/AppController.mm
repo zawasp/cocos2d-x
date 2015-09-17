@@ -23,7 +23,7 @@
  ****************************************************************************/
 
 #import "AppController.h"
-#import "CCEAGLView.h"
+#import "platform/ios/CCEAGLView-ios.h"
 #import "cocos2d.h"
 #import "AppDelegate.h"
 #import "RootViewController.h"
@@ -55,6 +55,9 @@ static AppDelegate s_sharedApplication;
                                           sharegroup: nil
                                        multiSampling: NO
                                      numberOfSamples: 0 ];
+    
+    // Enable or disable multiple touches
+    [eaglView setMultipleTouchEnabled:NO];
 
     // Use RootViewController manage CCEAGLView 
     _viewController = [[RootViewController alloc] initWithNibName:nil bundle:nil];
