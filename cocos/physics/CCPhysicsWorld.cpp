@@ -532,11 +532,11 @@ void PhysicsWorld::removeBody(PhysicsBody* body)
 {
     if (body->getWorld() != this)
     {
-        CCLOG("Physics Warnning: this body doesn't belong to this world");
+        CCLOG("Physics Warning: this body doesn't belong to this world");
         return;
     }
     
-    // destory the body's joints
+    // destroy the body's joints
     auto removeCopy = body->_joints;
     for (auto joint : removeCopy)
     {
@@ -575,20 +575,24 @@ void PhysicsWorld::removeJoint(PhysicsJoint* joint, bool destroy)
     {
         if (joint->getWorld() != this && destroy)
         {
-            CCLOG("physics warnning: the joint is not in this world, it won't be destoried utill the body it conntect is destoried");
+            CCLOG("physics warning: the joint is not in this world, it won't be destroyed until the body it connects is destroyed");
             return;
         }
 
         joint->_destoryMark = destroy;
+
+        bool removedFromDelayAdd = false;
+        auto it = std::find(_delayAddJoints.begin(), _delayAddJoints.end(), joint);
+        if (it != _delayAddJoints.end())
+        {
+            _delayAddJoints.erase(it);
+            removedFromDelayAdd = true;
+        }
+
         if (cpSpaceIsLocked(_cpSpace))
         {
-            auto it = std::find(_delayAddJoints.begin(), _delayAddJoints.end(), joint);
-            if (it != _delayAddJoints.end())
-            {
-                _delayAddJoints.erase(it);
+            if (removedFromDelayAdd)
                 return;
-            }
-
             if (std::find(_delayRemoveJoints.rbegin(), _delayRemoveJoints.rend(), joint) == _delayRemoveJoints.rend())
             {
                 _delayRemoveJoints.push_back(joint);
@@ -647,11 +651,9 @@ void PhysicsWorld::addJoint(PhysicsJoint* joint)
 {
     if (joint)
     {
-        if (joint->getWorld() && joint->getWorld() != this)
-        {
-            joint->removeFormWorld();
-        }
+        CCASSERT(joint->getWorld() == nullptr, "Can not add joint already add to other world!");
 
+        joint->_world = this;
         auto it = std::find(_delayRemoveJoints.begin(), _delayRemoveJoints.end(), joint);
         if (it != _delayRemoveJoints.end())
         {
@@ -690,7 +692,7 @@ void PhysicsWorld::doRemoveBody(PhysicsBody* body)
 {
     CCASSERT(body != nullptr, "the body can not be nullptr");
     
-    // remove shaps
+    // remove shapes
     for (auto& shape : body->getShapes())
     {
         removeShape(shape);

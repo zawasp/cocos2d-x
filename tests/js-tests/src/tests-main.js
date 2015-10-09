@@ -62,6 +62,9 @@ var TestScene = cc.Scene.extend({
         }
     },
     onMainMenuCallback:function () {
+        if (director.isPaused()) {
+            director.resume();
+        } 
         var scene = new cc.Scene();
         var layer = new TestController();
         scene.addChild(layer);
@@ -315,6 +318,14 @@ var testNames = [
         linksrc:"",
         testScene:function () {
             return new CocoStudioTestScene();
+        }
+    },
+    {
+        title:"Component Test",
+        platforms: PLATFORM_JSB,
+        linksrc:"src/ComponentTest/ComponentTest.js",
+        testScene:function () {
+            return new ComponentTestScene();
         }
     },
     {
