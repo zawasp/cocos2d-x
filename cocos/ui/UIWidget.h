@@ -845,6 +845,8 @@ public:
      */
     bool isLayoutComponentEnabled()const;
 
+    void click();
+
 CC_CONSTRUCTOR_ACCESS:
 
     //initializes state of widget.
