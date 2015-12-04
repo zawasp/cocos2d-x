@@ -1335,12 +1335,12 @@ void Widget::copyProperties(Widget *widget)
 /*temp action*/
 void Widget::setActionTag(int tag)
 {
-	_actionTag = tag;
+    _actionTag = tag;
 }
 
 int Widget::getActionTag()const
 {
-	return _actionTag;
+    return _actionTag;
 }
 
 void Widget::setFocused(bool focus)
@@ -1511,7 +1511,13 @@ bool Widget::isLayoutComponentEnabled()const
     return _usingLayoutComponent;
 }
 
-
+void Widget::click()
+{
+    if (_clickEventListener != nullptr)
+    {
+        _clickEventListener(this);
+    }
+}
 
 }
 NS_CC_END
