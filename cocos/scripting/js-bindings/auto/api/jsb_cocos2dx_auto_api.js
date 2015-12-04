@@ -121,6 +121,16 @@ getPixelsHigh : function (
 },
 
 /**
+ * @method setValid
+ * @param {bool} arg0
+ */
+setValid : function (
+bool 
+)
+{
+},
+
+/**
  * @method getBitsPerPixelForFormat
 * @param {cc.Texture2D::PixelFormat} pixelformat
 * @return {unsigned int|unsigned int}
@@ -175,6 +185,16 @@ float
 },
 
 /**
+ * @method getPath
+ * @return {String}
+ */
+getPath : function (
+)
+{
+    return ;
+},
+
+/**
  * @method drawInRect
  * @param {rect_object} arg0
  */
@@ -192,6 +212,16 @@ getContentSize : function (
 )
 {
     return cc.Size;
+},
+
+/**
+ * @method isValid
+ * @return {bool}
+ */
+isValid : function (
+)
+{
+    return false;
 },
 
 /**
@@ -365,6 +395,16 @@ getStartLocationInView : function (
 },
 
 /**
+ * @method getCurrentForce
+ * @return {float}
+ */
+getCurrentForce : function (
+)
+{
+    return 0;
+},
+
+/**
  * @method getStartLocation
  * @return {vec2_object}
  */
@@ -386,16 +426,30 @@ getID : function (
 
 /**
  * @method setTouchInfo
- * @param {int} arg0
- * @param {float} arg1
- * @param {float} arg2
- */
-setTouchInfo : function (
-int, 
-float, 
+* @param {int|int} int
+* @param {float|float} float
+* @param {float|float} float
+* @param {float} float
+* @param {float} float
+*/
+setTouchInfo : function(
+int,
+float,
+float,
+float,
 float 
 )
 {
+},
+
+/**
+ * @method getMaxForce
+ * @return {float}
+ */
+getMaxForce : function (
+)
+{
+    return 0;
 },
 
 /**
@@ -3750,6 +3804,16 @@ getFileType : function (
 },
 
 /**
+ * @method getFilePath
+ * @return {String}
+ */
+getFilePath : function (
+)
+{
+    return ;
+},
+
+/**
  * @method getNumberOfMipmaps
  * @return {int}
  */
@@ -4840,6 +4904,18 @@ getElapsed : function (
 cc.Sequence = {
 
 /**
+ * @method init
+ * @param {Array} arg0
+ * @return {bool}
+ */
+init : function (
+array 
+)
+{
+    return false;
+},
+
+/**
  * @method initWithTwoActions
  * @param {cc.FiniteTimeAction} arg0
  * @param {cc.FiniteTimeAction} arg1
@@ -4992,6 +5068,18 @@ RepeatForever : function (
  * @class Spawn
  */
 cc.Spawn = {
+
+/**
+ * @method init
+ * @param {Array} arg0
+ * @return {bool}
+ */
+init : function (
+array 
+)
+{
+    return false;
+},
 
 /**
  * @method initWithTwoActions
@@ -12060,6 +12148,28 @@ float
 },
 
 /**
+ * @method initWithTTF
+* @param {cc._ttfConfig|String} _ttfconfig
+* @param {String|String} str
+* @param {cc.TextHAlignment|float} texthalignment
+* @param {int|size_object} int
+* @param {cc.TextHAlignment} texthalignment
+* @param {cc.TextVAlignment} textvalignment
+* @return {bool|bool}
+*/
+initWithTTF : function(
+str,
+str,
+float,
+size,
+texthalignment,
+textvalignment 
+)
+{
+    return false;
+},
+
+/**
  * @method setLineHeight
  * @param {float} arg0
  */
@@ -13511,6 +13621,16 @@ isSelected : function (
 )
 {
     return false;
+},
+
+/**
+ * @method setCallback
+ * @param {function} arg0
+ */
+setCallback : function (
+func 
+)
+{
 },
 
 /**
@@ -20893,11 +21013,43 @@ texture2d
 },
 
 /**
+ * @method setDirty
+ * @param {bool} arg0
+ */
+setDirty : function (
+bool 
+)
+{
+},
+
+/**
+ * @method renameTextureWithKey
+ * @param {String} arg0
+ * @param {String} arg1
+ */
+renameTextureWithKey : function (
+str, 
+str 
+)
+{
+},
+
+/**
  * @method removeUnusedTextures
  */
 removeUnusedTextures : function (
 )
 {
+},
+
+/**
+ * @method isDirty
+ * @return {bool}
+ */
+isDirty : function (
+)
+{
+    return false;
 },
 
 /**

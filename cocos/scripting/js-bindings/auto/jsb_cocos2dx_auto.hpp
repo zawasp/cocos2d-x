@@ -22,12 +22,15 @@ bool js_cocos2dx_Texture2D_releaseGLTexture(JSContext *cx, uint32_t argc, jsval 
 bool js_cocos2dx_Texture2D_hasPremultipliedAlpha(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_Texture2D_initWithMipmaps(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_Texture2D_getPixelsHigh(JSContext *cx, uint32_t argc, jsval *vp);
+bool js_cocos2dx_Texture2D_setValid(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_Texture2D_getBitsPerPixelForFormat(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_Texture2D_getName(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_Texture2D_initWithString(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_Texture2D_setMaxT(JSContext *cx, uint32_t argc, jsval *vp);
+bool js_cocos2dx_Texture2D_getPath(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_Texture2D_drawInRect(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_Texture2D_getContentSize(JSContext *cx, uint32_t argc, jsval *vp);
+bool js_cocos2dx_Texture2D_isValid(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_Texture2D_setAliasTexParameters(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_Texture2D_setAntiAliasTexParameters(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_Texture2D_generateMipmap(JSContext *cx, uint32_t argc, jsval *vp);
@@ -53,9 +56,11 @@ bool js_cocos2dx_Touch_getPreviousLocationInView(JSContext *cx, uint32_t argc, j
 bool js_cocos2dx_Touch_getLocation(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_Touch_getDelta(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_Touch_getStartLocationInView(JSContext *cx, uint32_t argc, jsval *vp);
+bool js_cocos2dx_Touch_getCurrentForce(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_Touch_getStartLocation(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_Touch_getID(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_Touch_setTouchInfo(JSContext *cx, uint32_t argc, jsval *vp);
+bool js_cocos2dx_Touch_getMaxForce(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_Touch_getLocationInView(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_Touch_getPreviousLocation(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_Touch_Touch(JSContext *cx, uint32_t argc, jsval *vp);
@@ -502,6 +507,7 @@ bool js_cocos2dx_Image_initWithImageFile(JSContext *cx, uint32_t argc, jsval *vp
 bool js_cocos2dx_Image_getWidth(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_Image_getBitPerPixel(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_Image_getFileType(JSContext *cx, uint32_t argc, jsval *vp);
+bool js_cocos2dx_Image_getFilePath(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_Image_getNumberOfMipmaps(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_Image_getRenderFormat(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_Image_getData(JSContext *cx, uint32_t argc, jsval *vp);
@@ -642,6 +648,7 @@ bool js_cocos2dx_Sequence_constructor(JSContext *cx, uint32_t argc, jsval *vp);
 void js_cocos2dx_Sequence_finalize(JSContext *cx, JSObject *obj);
 void js_register_cocos2dx_Sequence(JSContext *cx, JS::HandleObject global);
 void register_all_cocos2dx(JSContext* cx, JS::HandleObject obj);
+bool js_cocos2dx_Sequence_init(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_Sequence_initWithTwoActions(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_Sequence_Sequence(JSContext *cx, uint32_t argc, jsval *vp);
 
@@ -678,6 +685,7 @@ bool js_cocos2dx_Spawn_constructor(JSContext *cx, uint32_t argc, jsval *vp);
 void js_cocos2dx_Spawn_finalize(JSContext *cx, JSObject *obj);
 void js_register_cocos2dx_Spawn(JSContext *cx, JS::HandleObject global);
 void register_all_cocos2dx(JSContext* cx, JS::HandleObject obj);
+bool js_cocos2dx_Spawn_init(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_Spawn_initWithTwoActions(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_Spawn_Spawn(JSContext *cx, uint32_t argc, jsval *vp);
 
@@ -2230,6 +2238,7 @@ bool js_cocos2dx_Label_setClipMarginEnabled(JSContext *cx, uint32_t argc, jsval 
 bool js_cocos2dx_Label_setString(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_Label_setSystemFontName(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_Label_setBMFontFilePath(JSContext *cx, uint32_t argc, jsval *vp);
+bool js_cocos2dx_Label_initWithTTF(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_Label_setLineHeight(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_Label_setSystemFontSize(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_Label_setOverflow(JSContext *cx, uint32_t argc, jsval *vp);
@@ -2427,6 +2436,7 @@ bool js_cocos2dx_MenuItem_initWithCallback(JSContext *cx, uint32_t argc, jsval *
 bool js_cocos2dx_MenuItem_isEnabled(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_MenuItem_selected(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_MenuItem_isSelected(JSContext *cx, uint32_t argc, jsval *vp);
+bool js_cocos2dx_MenuItem_setCallback(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_MenuItem_unselected(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_MenuItem_rect(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_MenuItem_MenuItem(JSContext *cx, uint32_t argc, jsval *vp);
@@ -3735,7 +3745,10 @@ bool js_cocos2dx_TextureCache_addImage(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_TextureCache_unbindImageAsync(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_TextureCache_getTextureForKey(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_TextureCache_getTextureFilePath(JSContext *cx, uint32_t argc, jsval *vp);
+bool js_cocos2dx_TextureCache_setDirty(JSContext *cx, uint32_t argc, jsval *vp);
+bool js_cocos2dx_TextureCache_renameTextureWithKey(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_TextureCache_removeUnusedTextures(JSContext *cx, uint32_t argc, jsval *vp);
+bool js_cocos2dx_TextureCache_isDirty(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_TextureCache_removeTexture(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_TextureCache_waitForQuit(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_TextureCache_TextureCache(JSContext *cx, uint32_t argc, jsval *vp);
