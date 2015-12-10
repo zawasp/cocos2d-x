@@ -586,7 +586,7 @@ bool Label::setBMFontFilePath(const std::string& bmfontFilePath, const Vec2& ima
         return false;
     }
 
-    //asign the default fontSize
+    //assign the default fontSize
     if (fabs(fontSize) < FLT_EPSILON) {
         FontFNT *bmFont = (FontFNT*)newAtlas->getFont();
         if (bmFont) {
@@ -797,7 +797,7 @@ bool Label::alignText()
 
         if(!updateQuads()){
             ret = false;
-            if(!_enableWrap && _overflow == Overflow::SHRINK){
+            if(_overflow == Overflow::SHRINK){
                 this->shrinkLabelToContentSize(CC_CALLBACK_0(Label::isHorizontalClamp, this));
             }
             break;
@@ -826,6 +826,17 @@ bool Label::computeHorizontalKernings(const std::u16string& stringToRender)
         return false;
     else
         return true;
+}
+
+bool Label::isHorizontalClamped(float letterPositionX, int lineIndex)
+{
+    auto wordWidth = this->_linesWidth[lineIndex];
+    bool letterOverClamp = (letterPositionX > _contentSize.width || letterPositionX < 0);
+    if (!_enableWrap) {
+        return letterOverClamp;
+    }else{
+        return (wordWidth > this->_contentSize.width && letterOverClamp);
+    }
 }
 
 bool Label::updateQuads()
@@ -863,27 +874,26 @@ bool Label::updateQuads()
                 }
             }
 
-            if(!_enableWrap){
-                auto px = _lettersInfo[ctr].positionX + letterDef.width/2 * _bmfontScale + _linesOffsetX[_lettersInfo[ctr].lineIndex];
-                if(_labelWidth > 0.f){
-                    if (px > _contentSize.width || px < 0) {
-                        if(_overflow == Overflow::CLAMP){
+            auto lineIndex = _lettersInfo[ctr].lineIndex;
+            auto px = _lettersInfo[ctr].positionX + letterDef.width/2 * _bmfontScale + _linesOffsetX[lineIndex];
+
+            if(_labelWidth > 0.f){
+                if (this->isHorizontalClamped(px, lineIndex)) {
+                    if(_overflow == Overflow::CLAMP){
+                        _reusedRect.size.width = 0;
+                    }else if(_overflow == Overflow::SHRINK){
+                        if (_contentSize.width > letterDef.width) {
+                            letterClamp = true;
+                            ret = false;
+                            break;
+                        }else{
                             _reusedRect.size.width = 0;
-                        }else if(_overflow == Overflow::SHRINK){
-                            if (letterDef.width > 0
-                                && _contentSize.width > letterDef.width) {
-                                letterClamp = true;
-                                ret = false;
-                                break;
-                            }else{
-                                //clamp
-                                _reusedRect.size.width = 0;
-                            }
-                           
                         }
+
                     }
                 }
             }
+
 
             if (_reusedRect.size.height > 0.f && _reusedRect.size.width > 0.f)
             {
@@ -892,7 +902,7 @@ bool Label::updateQuads()
                 _reusedLetter->setPosition(letterPositionX, py);
                 auto index = static_cast<int>(_batchNodes.at(letterDef.textureID)->getTextureAtlas()->getTotalQuads());
                 _lettersInfo[ctr].atlasIndex = index;
-                
+
                 this->updateLetterSpriteScale(_reusedLetter);
 
                 _batchNodes.at(letterDef.textureID)->insertQuadFromSprite(_reusedLetter, index);
@@ -1929,7 +1939,7 @@ float Label::getRenderingFontSize()const
         fontSize = this->getTTFConfig().fontSize;
     }else if(_currentLabelType == LabelType::STRING_TEXTURE){
         fontSize = _systemFontSize;
-    }else{ //FIXME: find a way to caculate char map font size
+    }else{ //FIXME: find a way to calculate char map font size
         fontSize = this->getLineHeight();
     }
     return fontSize;
