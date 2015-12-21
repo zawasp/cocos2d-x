@@ -337,7 +337,7 @@ public:
     void scrollToItem(ssize_t itemIndex, const Vec2& positionRatioInView, const Vec2& itemAnchorPoint, float timeInSec);
     
     /**
-     * @brief Query current selected widget's idnex.
+     * @brief Query current selected widget's index.
      *
      
      * @return A index of a selected item.
@@ -390,8 +390,8 @@ protected:
 
     virtual void onItemListChanged();
 
+    virtual void remedyLayoutParameter(Widget* item);
     void updateInnerContainerSize();
-    void remedyLayoutParameter(Widget* item);
     void remedyVerticalLayoutParameter(LinearLayoutParameter* layoutParameter, ssize_t itemIndex);
     void remedyHorizontalLayoutParameter(LinearLayoutParameter* layoutParameter,ssize_t itemIndex);
     
