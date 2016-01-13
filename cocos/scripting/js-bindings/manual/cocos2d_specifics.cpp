@@ -2446,10 +2446,25 @@ bool js_cocos2dx_ActionInterval_repeat(JSContext *cx, uint32_t argc, jsval *vp)
         if (timesInt <= 0) {
             JS_ReportError(cx, "js_cocos2dx_ActionInterval_repeat : Repeat times must be greater than 0");
         }
-        
+
+        // no longer owned since it will be re-bound
+        cobj->_scriptOwned = false;
+
         cocos2d::Repeat* action = new (std::nothrow) cocos2d::Repeat;
         action->initWithAction(cobj, timesInt);
+
+#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
+        // Using jsb_ref_rebind will cause GC crash on win32
+        action->autorelease();
+        // Unlink old native object
+        JS::RemoveObjectRoot(cx, &proxy->obj);
+        jsb_remove_proxy(proxy);
+        // Relink with new object
+        js_proxy_t* newProxy = jsb_new_proxy(action, obj);
+        JS::AddNamedObjectRoot(cx, &newProxy->obj, "cocos2d::Repeat");
+#else // CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
         jsb_ref_rebind(cx, obj, proxy, cobj, action, "cocos2d::Repeat");
+#endif // CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 
         args.rval().set(OBJECT_TO_JSVAL(obj));
         return true;
@@ -2468,10 +2483,26 @@ bool js_cocos2dx_ActionInterval_repeatForever(JSContext *cx, uint32_t argc, jsva
     JSB_PRECONDITION2( cobj, cx, false, "js_cocos2dx_ActionInterval_repeatForever : Invalid Native Object");
     
     if (argc == 0) {
+
+        // no longer owned.
+        cobj->_scriptOwned = false;
+
         cocos2d::RepeatForever* action = new (std::nothrow) cocos2d::RepeatForever;
         action->initWithAction(cobj);
 
+#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
+        // Using jsb_ref_rebind will cause GC crash on win32
+        action->autorelease();
+        // Unlink old native object
+        JS::RemoveObjectRoot(cx, &proxy->obj);
+        jsb_remove_proxy(proxy);
+        // Relink with new object
+        js_proxy_t* newProxy = jsb_new_proxy(action, jsobj);
+        JS::AddNamedObjectRoot(cx, &newProxy->obj, "cocos2d::RepeatForever");
+#else // CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
         jsb_ref_rebind(cx, jsobj, proxy, cobj, action, "cocos2d::RepeatForever");
+#endif // CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
+
         args.rval().set(OBJECT_TO_JSVAL(jsobj));
         return true;
     }
@@ -2498,10 +2529,24 @@ bool js_cocos2dx_ActionInterval_speed(JSContext *cx, uint32_t argc, jsval *vp)
             JS_ReportError(cx, "js_cocos2dx_ActionInterval_speed : Speed must not be negative");
             return false;
         }
-        
+
+        // no longer owned since it is going to be re-bound
+        cobj->_scriptOwned = false;
+
         cocos2d::Speed* action = new (std::nothrow) cocos2d::Speed;
         action->initWithAction(cobj, speed);
+#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
+        // Using jsb_ref_rebind will cause GC crash on win32
+        action->autorelease();
+        // Unlink old native object
+        JS::RemoveObjectRoot(cx, &proxy->obj);
+        jsb_remove_proxy(proxy);
+        // Relink with new object
+        js_proxy_t* newProxy = jsb_new_proxy(action, obj);
+        JS::AddNamedObjectRoot(cx, &newProxy->obj, "cocos2d::Speed");
+#else // CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
         jsb_ref_rebind(cx, obj, proxy, cobj, action, "cocos2d::Speed");
+#endif // CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 
         args.rval().set(OBJECT_TO_JSVAL(obj));
         return true;
@@ -2563,6 +2608,9 @@ bool js_cocos2dx_ActionInterval_easing(JSContext *cx, uint32_t argc, jsval *vp)
     JS::RootedValue jsParam(cx);
     double tag;
     double parameter;
+
+    // no longer owned since it will be re-bound
+    oldAction->_scriptOwned = false;
 
     for (int i = 0; i < argc; i++)
     {
@@ -2809,8 +2857,19 @@ bool js_cocos2dx_ActionInterval_easing(JSContext *cx, uint32_t argc, jsval *vp)
         }
     }
 
+#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
+    // Using jsb_ref_rebind will cause GC crash on win32
+    newAction->autorelease();
+    // Unlink old native object
+    JS::RemoveObjectRoot(cx, &proxy->obj);
+    jsb_remove_proxy(proxy);
+    // Relink with new object
+    js_proxy_t* newProxy = jsb_new_proxy(newAction, jsobj);
+    JS::AddNamedObjectRoot(cx, &newProxy->obj, "cocos2d::EaseAction");
+#else // CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
     // Unbind existing proxy binding with cobj, and rebind with the new action
     jsb_ref_rebind(cx, jsobj, proxy, oldAction, newAction, "cocos2d::EaseAction");
+#endif // CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 
     args.rval().set(OBJECT_TO_JSVAL(jsobj));
     return true;
@@ -5418,7 +5477,7 @@ bool js_cocos2dx_PolygonInfo_getTriaglesCount(JSContext *cx, uint32_t argc, jsva
     JSB_PRECONDITION2( cobj, cx, false, "js_cocos2dx_PolygonInfo_getTriaglesCount : Invalid Native Object");
     if (argc == 0)
     {
-        const unsigned int ret = cobj->getTriaglesCount();
+        const unsigned int ret = cobj->getTrianglesCount();
         jsval jsret = JSVAL_NULL;
         jsret = uint32_to_jsval(cx, ret);
         args.rval().set(jsret);
