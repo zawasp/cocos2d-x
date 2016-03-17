@@ -91,6 +91,7 @@ const char *Director::EVENT_AFTER_DRAW = "director_after_draw";
 const char *Director::EVENT_AFTER_VISIT = "director_after_visit";
 const char *Director::EVENT_BEFORE_UPDATE = "director_before_update";
 const char *Director::EVENT_AFTER_UPDATE = "director_after_update";
+const char *Director::EVENT_RESET = "director_reset";
 
 Director* Director::getInstance()
 {
@@ -164,6 +165,7 @@ bool Director::init(void)
     _eventAfterUpdate->setUserData(this);
     _eventProjectionChanged = new (std::nothrow) EventCustom(EVENT_PROJECTION_CHANGED);
     _eventProjectionChanged->setUserData(this);
+    _eventResetDirector = new (std::nothrow) EventCustom(EVENT_RESET);
     //init TextureCache
     initTextureCache();
     initMatrixStack();
@@ -193,6 +195,7 @@ Director::~Director(void)
     delete _eventAfterDraw;
     delete _eventAfterVisit;
     delete _eventProjectionChanged;
+    delete _eventResetDirector;
 
     delete _renderer;
 
@@ -976,6 +979,8 @@ void Director::reset()
     _runningScene = nullptr;
     _nextScene = nullptr;
 
+    _eventDispatcher->dispatchEvent(_eventResetDirector);
+    
     // cleanup scheduler
     getScheduler()->unscheduleAll();
     
@@ -1033,7 +1038,7 @@ void Director::reset()
     GLProgramCache::destroyInstance();
     GLProgramStateCache::destroyInstance();
     FileUtils::destroyInstance();
-    AsyncTaskPool::destoryInstance();
+    AsyncTaskPool::destroyInstance();
     
     // cocos2d-x specific data structures
     UserDefault::destroyInstance();
