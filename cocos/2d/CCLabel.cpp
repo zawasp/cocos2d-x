@@ -587,6 +587,7 @@ void Label::setFontAtlas(FontAtlas* atlas,bool distanceFieldEnabled /* = false *
     {
         _lineHeight = _fontAtlas->getLineHeight();
         _contentDirty = true;
+        _systemFontDirty = false;
     }
     _useDistanceField = distanceFieldEnabled;
     _useA8Shader = useA8Shader;
@@ -949,7 +950,6 @@ bool Label::setTTFConfigInternal(const TTFConfig& ttfConfig)
         reset();
         return false;
     }
-    _systemFontDirty = false;
 
     _currentLabelType = LabelType::TTF;
     setFontAtlas(newAtlas,ttfConfig.distanceFieldEnabled,true);
