@@ -823,7 +823,7 @@ const DownloadUnits& AssetsManagerEx::getFailedAssets() const
 
 void AssetsManagerEx::downloadFailedAssets()
 {
-    CCLOG("AssetsManagerEx : Start update %lu failed assets.\n", _failedUnits.size());
+    CCLOG("AssetsManagerEx : Start update %lu failed assets.\n", static_cast<unsigned long>(_failedUnits.size()));
     updateAssets(_failedUnits);
 }
 
@@ -850,6 +850,8 @@ void AssetsManagerEx::onError(const network::DownloadTask& task,
         // Found unit and add it to failed units
         if (unitIt != _downloadUnits.end())
         {
+            _totalWaitToDownload--;
+            
             DownloadUnit unit = unitIt->second;
             _failedUnits.emplace(unit.customId, unit);
         }

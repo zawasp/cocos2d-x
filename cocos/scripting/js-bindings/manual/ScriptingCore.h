@@ -28,7 +28,7 @@
 
 #include "jsapi.h"
 #include "jsfriendapi.h"
-#include "cocos2d.h"
+
 #include "ui/CocosGUI.h"
 #include "scripting/js-bindings/manual/js_bindings_config.h"
 #include "scripting/js-bindings/manual/js_bindings_core.h"
@@ -40,7 +40,7 @@
 #include <assert.h>
 #include <memory>
 
-#define ENGINE_VERSION "Cocos2d-JS v3.10"
+#define ENGINE_VERSION "Cocos2d-JS v3.11"
 
 void js_log(const char *format, ...);
 
