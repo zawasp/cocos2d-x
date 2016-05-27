@@ -68,8 +68,6 @@
 #define  LOGD(...) js_log(__VA_ARGS__)
 #endif
 
-#include "scripting/js-bindings/manual/js_bindings_config.h"
-
 #if COCOS2D_DEBUG
 #define TRACE_DEBUGGER_SERVER(...) CCLOG(__VA_ARGS__)
 #else
@@ -1770,11 +1768,11 @@ void SimpleRunLoop::update(float dt)
         }
         g_qMutex.unlock();
         
-        if (messageCount == 0)
-            break;
-        
         if (!message.empty())
             ScriptingCore::getInstance()->debugProcessInput(message);
+        
+        if (messageCount == 0)
+            break;
     }
 }
 
@@ -1807,11 +1805,11 @@ static bool NS_ProcessNextEvent()
         }
         g_qMutex.unlock();
         
-        if (messageCount == 0)
-            break;
-        
         if (!message.empty())
             ScriptingCore::getInstance()->debugProcessInput(message);
+        
+        if (messageCount == 0)
+            break;
     }
 //    std::this_thread::yield();
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
