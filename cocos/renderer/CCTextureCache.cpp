@@ -34,12 +34,11 @@ THE SOFTWARE.
 
 #include "renderer/CCTexture2D.h"
 #include "base/ccMacros.h"
+#include "base/ccUTF8.h"
 #include "base/CCDirector.h"
 #include "base/CCScheduler.h"
 #include "platform/CCFileUtils.h"
 #include "base/ccUtils.h"
-
-#include "deprecated/CCString.h"
 #include "base/CCNinePatchImageParser.h"
 
 
@@ -93,11 +92,12 @@ std::string TextureCache::getDescription() const
 struct TextureCache::AsyncStruct
 {
 public:
-    AsyncStruct(const std::string& fn, std::function<void(Texture2D*)> f) : filename(fn), callback(f), loadSuccess(false) {}
+    AsyncStruct(const std::string& fn, std::function<void(Texture2D*)> f) : filename(fn), callback(f), pixelFormat(Texture2D::getDefaultAlphaPixelFormat()), loadSuccess(false) {}
     
     std::string filename;
     std::function<void(Texture2D*)> callback;
     Image image;
+    Texture2D::PixelFormat pixelFormat;
     bool loadSuccess;
 };
 
@@ -280,7 +280,7 @@ void TextureCache::addImageAsyncCallBack(float dt)
                 // generate texture in render thread
                 texture = new (std::nothrow) Texture2D();
                 
-                texture->initWithImage(image);
+                texture->initWithImage(image, asyncStruct->pixelFormat);
                 //parse 9-patch info
                 this->parseNinePatchImage(image, texture, asyncStruct->filename);
 #if CC_ENABLE_CACHE_TEXTURE_DATA
@@ -385,6 +385,7 @@ void TextureCache::parseNinePatchImage(cocos2d::Image *image, cocos2d::Texture2D
 Texture2D* TextureCache::addImage(Image *image, const std::string &key)
 {
     CCASSERT(image != nullptr, "TextureCache: image MUST not be nil");
+    CCASSERT(image->getData() != nullptr, "TextureCache: image MUST not be nil");
 
     Texture2D * texture = nullptr;
 

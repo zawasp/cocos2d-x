@@ -146,7 +146,7 @@ public:
     /**
      LocalZOrder is the 'key' used to sort the node relative to its siblings.
 
-     The Node's parent will sort all its children based ont the LocalZOrder value.
+     The Node's parent will sort all its children based on the LocalZOrder value.
      If two nodes have the same LocalZOrder, then the node that was added first to the children's array will be in front of the other node in the array.
      
      Also, the Scene Graph is traversed using the "In-Order" tree traversal algorithm ( http://en.wikipedia.org/wiki/Tree_traversal#In-order )
@@ -1644,6 +1644,7 @@ public:
      * @param additionalTransform An additional transform matrix.
      */
     void setAdditionalTransform(Mat4* additionalTransform);
+    void setAdditionalTransform(const Mat4& additionalTransform);
     void setAdditionalTransform(const AffineTransform& additionalTransform);
 
     /// @} end of Coordinate Converters

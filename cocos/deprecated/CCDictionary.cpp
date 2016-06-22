@@ -25,6 +25,7 @@
 
 #include "deprecated/CCDictionary.h"
 #include <type_traits>
+#include "base/ccUTF8.h"
 #include "platform/CCFileUtils.h"
 #include "deprecated/CCString.h"
 #include "deprecated/CCBool.h"
@@ -570,7 +571,8 @@ __Dictionary* __Dictionary::clone() const
     Clonable* obj = nullptr;
     if (_dictType == kDictInt)
     {
-        CCDICT_FOREACH(this, element)
+        DictElement* tmp = nullptr;
+        HASH_ITER(hh, _elements, element, tmp)
         {
             obj = dynamic_cast<Clonable*>(element->getObject());
             if (obj)
@@ -589,7 +591,8 @@ __Dictionary* __Dictionary::clone() const
     }
     else if (_dictType == kDictStr)
     {
-        CCDICT_FOREACH(this, element)
+        DictElement* tmp = nullptr;
+        HASH_ITER(hh, _elements, element, tmp)
         {
             obj = dynamic_cast<Clonable*>(element->getObject());
             if (obj)

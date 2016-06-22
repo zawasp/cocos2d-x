@@ -68,7 +68,7 @@ namespace utils
     CC_DLL void  captureScreen(const std::function<void(bool, const std::string&)>& afterCaptured, const std::string& filename);
 
     /** Capture a specific Node.
-    * @param startNode: specify the snapshot Node. It chould be cocos2d::Scene
+    * @param startNode specify the snapshot Node. It should be cocos2d::Scene
     * @param scale
     * @returns: return a Image, then can call saveToFile to save the image as "xxx.png or xxx.jpg".
     * @since v3.11
@@ -114,12 +114,20 @@ namespace utils
     CC_DLL Rect getCascadeBoundingBox(Node *node);
 
     /**
-     * Create a sprite instance from base64 encoded image.
+     * Create a sprite instance from base64 encoded image and adds the texture to the Texture Cache.
 
      * @return Returns an instance of sprite
      */
+    CC_DLL Sprite* createSpriteFromBase64Cached(const char* base64String, const char* key);
+
+    /**
+    * Create a sprite instance from base64 encoded image.
+
+    * @return Returns an instance of sprite
+    */
     CC_DLL Sprite* createSpriteFromBase64(const char* base64String);
-    
+
+
     /**
      * Find a child by name recursively
 
