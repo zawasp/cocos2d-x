@@ -194,7 +194,7 @@ const Size& GLView::getFrameSize() const
 
 void GLView::setFrameSize(float width, float height)
 {
-    _designResolutionSize = _screenSize = Size(width, height);
+    _screenSize = Size(width, height);
 }
 
 Rect GLView::getVisibleRect() const
@@ -493,8 +493,10 @@ void GLView::setVR(VRIRenderer* vrRenderer)
 {
     if (_vrImpl != vrRenderer)
     {
-        if (_vrImpl)
+        if (_vrImpl) {
+            _vrImpl->cleanup();
             delete _vrImpl;
+        }
 
         if (vrRenderer)
             vrRenderer->setup(this);

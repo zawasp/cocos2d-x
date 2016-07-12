@@ -136,7 +136,7 @@ void onCaptureScreen(const std::function<void(bool, const std::string&)>& afterC
                 startedCapture = false;
             };
 
-            AsyncTaskPool::getInstance()->enqueue(AsyncTaskPool::TaskType::TASK_IO, mainThread, (void*)NULL, [image, outputFile]()
+            AsyncTaskPool::getInstance()->enqueue(AsyncTaskPool::TaskType::TASK_IO, mainThread, nullptr, [image, outputFile]()
             {
                 succeedSaveToFile = image->saveToFile(outputFile);
                 delete image;
@@ -265,7 +265,7 @@ long long getTimeInMilliseconds()
 {
     struct timeval tv;
     gettimeofday (&tv, nullptr);
-    return tv.tv_sec * 1000 + tv.tv_usec / 1000;
+    return (long long)tv.tv_sec * 1000 + tv.tv_usec / 1000;
 }
 
 Rect getCascadeBoundingBox(Node *node)
@@ -326,6 +326,11 @@ Sprite* createSpriteFromBase64Cached(const char* base64String, const char* key)
         CCASSERT(imageResult, "Failed to create image from base64!");
         free(decoded);
 
+        if (!imageResult) {
+            CC_SAFE_RELEASE_NULL(image);
+            return nullptr;
+        }
+
         texture = Director::getInstance()->getTextureCache()->addImage(image, key);
         image->release();
     }
@@ -344,6 +349,11 @@ Sprite* createSpriteFromBase64(const char* base64String)
     bool imageResult = image->initWithImageData(decoded, length);
     CCASSERT(imageResult, "Failed to create image from base64!");
     free(decoded);
+
+    if (!imageResult) {
+        CC_SAFE_RELEASE_NULL(image);
+        return nullptr;
+    }
 
     Texture2D *texture = new (std::nothrow) Texture2D();
     texture->initWithImage(image);
