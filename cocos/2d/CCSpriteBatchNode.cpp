@@ -103,7 +103,7 @@ bool SpriteBatchNode::initWithTexture(Texture2D *tex, ssize_t capacity/* = DEFAU
 
     _descendants.reserve(capacity);
     
-    setGLProgramState(GLProgramState::getOrCreateWithGLProgramName(GLProgram::SHADER_NAME_POSITION_TEXTURE_COLOR));
+    setGLProgramState(GLProgramState::getOrCreateWithGLProgramName(GLProgram::SHADER_NAME_POSITION_TEXTURE_COLOR, tex));
     return true;
 }
 
@@ -259,7 +259,7 @@ void SpriteBatchNode::sortAllChildren()
 {
     if (_reorderChildDirty)
     {
-        std::sort(std::begin(_children), std::end(_children), nodeComparisonLess);
+        sortNodes(_children);
 
         //sorted now check all children
         if (!_children.empty())

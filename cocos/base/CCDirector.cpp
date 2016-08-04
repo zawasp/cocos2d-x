@@ -253,14 +253,6 @@ void Director::setGLDefaultValues()
     setAlphaBlending(true);
     setDepthTest(false);
     setProjection(_projection);
-
-    // Everything should be drawn within `Scene::render()`.
-    // Otherwise it might not render correctly since the GL state might not be the correct one
-    // so the FPS should be part of Scene. But until we move them there, this little hack is to
-    // set the default glViewPort(), so that when `Scene::render()` exits, the viewport is the correct
-    // one for the FPS
-    auto vp = Camera::getDefaultViewport();
-    glViewport(vp._left, vp._bottom, vp._width, vp._height);
 }
 
 // Draw the Scene
@@ -489,7 +481,7 @@ void Director::popMatrix(MATRIX_STACK_TYPE type)
     }
     else
     {
-        CCASSERT(false, "unknow matrix stack type");
+        CCASSERT(false, "unknown matrix stack type");
     }
 }
 
@@ -509,7 +501,7 @@ void Director::loadIdentityMatrix(MATRIX_STACK_TYPE type)
     }
     else
     {
-        CCASSERT(false, "unknow matrix stack type");
+        CCASSERT(false, "unknown matrix stack type");
     }
 }
 
@@ -529,7 +521,7 @@ void Director::loadMatrix(MATRIX_STACK_TYPE type, const Mat4& mat)
     }
     else
     {
-        CCASSERT(false, "unknow matrix stack type");
+        CCASSERT(false, "unknown matrix stack type");
     }
 }
 
@@ -549,7 +541,7 @@ void Director::multiplyMatrix(MATRIX_STACK_TYPE type, const Mat4& mat)
     }
     else
     {
-        CCASSERT(false, "unknow matrix stack type");
+        CCASSERT(false, "unknown matrix stack type");
     }
 }
 
@@ -569,7 +561,7 @@ void Director::pushMatrix(MATRIX_STACK_TYPE type)
     }
     else
     {
-        CCASSERT(false, "unknow matrix stack type");
+        CCASSERT(false, "unknown matrix stack type");
     }
 }
 
@@ -588,7 +580,7 @@ const Mat4& Director::getMatrix(MATRIX_STACK_TYPE type) const
         return _textureMatrixStack.top();
     }
 
-    CCASSERT(false, "unknow matrix stack type, will return modelview matrix instead");
+    CCASSERT(false, "unknown matrix stack type, will return modelview matrix instead");
     return  _modelViewMatrixStack.top();
 }
 
