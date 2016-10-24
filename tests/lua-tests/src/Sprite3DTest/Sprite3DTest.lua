@@ -830,7 +830,7 @@ function Sprite3DWithOBBPerfromanceTest:unproject( viewProjection, viewport, src
     screen.y = screen.y * 2.0 - 1.0
     screen.z = screen.z * 2.0 - 1.0
     local inversed = cc.mat4.new(viewProjection:getInversed())
-    screen = inversed:transformVector(screen, screen)
+    screen = inversed:transformVector(screen)
     if screen.w ~= 0.0 then
         screen.x = screen.x / screen.w
         screen.y = screen.y / screen.w
@@ -1179,7 +1179,6 @@ function Sprite3DCubeMapTest:addNewSpriteWithCoords(pos)
 
     self._skyBox:setTexture(self._textureCube)
     self:addChild(self._skyBox)
-    self._skyBox:setScale(700)
 
     self:addChild(camera)
     self:setCameraMask(2)
