@@ -1161,7 +1161,7 @@ void Node::draw()
     draw(renderer, _modelViewTransform, true);
 }
 
-void Node::draw(Renderer* renderer, const Mat4 &transform, uint32_t flags)
+void Node::draw(Renderer* /*renderer*/, const Mat4 & /*transform*/, uint32_t /*flags*/)
 {
 }
 
@@ -1461,6 +1461,12 @@ ssize_t Node::getNumberOfRunningActions() const
 {
     return _actionManager->getNumberOfRunningActionsInTarget(this);
 }
+
+ssize_t Node::getNumberOfRunningActionsByTag(int tag) const
+{
+    return _actionManager->getNumberOfRunningActionsInTargetByTag(this, tag);
+}
+
 
 // MARK: Callbacks
 
@@ -2020,6 +2026,14 @@ void Node::disableCascadeOpacity()
     {
         child->updateDisplayedOpacity(255);
     }
+}
+
+void Node::setOpacityModifyRGB(bool /*value*/)
+{}
+
+bool Node::isOpacityModifyRGB() const
+{
+    return false;
 }
 
 const Color3B& Node::getColor(void) const
